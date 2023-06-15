@@ -35,6 +35,27 @@ This course is a "command line" course. We assume that you are somewhat comforta
 2. [MobaXterm](https://mobaxterm.mobatek.net) (windows) 
 3. Visual Studio Code we have documentation on how to set it up [here](https://servicedesk.surf.nl/wiki/display/WIKI/Visual+Studio+Code+for+remote+development) (go to the Running the VS Code Server on a login node section)
 
+
+## Reservations available for the course
+
+### Day 1 (energy_efficiency_course_cpu)
+
+How to get there
+```
+salloc --ntasks=32 -t 02:00:00 -p thin --reservation=energy_efficiency_course_cpu --constraint=hwperf
+```
+
+
+### Day 2 (energy_efficiency_course_cpu and energy_efficiency_course_gpu)
+
+```
+salloc --ntasks=32 -t 02:00:00 -p thin --reservation=energy_efficiency_course_cpu --constraint=hwperf
+```
+AND
+```
+salloc --ntasks=32 -t 02:00:00 -p thin --reservation=energy_efficiency_course_gpu --constraint=hwperf
+```
+
 ---
 # Examples/sources/scripts used in the course
 ## Sources are located in the `src/`
