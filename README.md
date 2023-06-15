@@ -1,6 +1,6 @@
 # Energy efficient computing
 
-## Schedule (Draft Version 9-June-2023)
+## Schedule
 ---
 ### Day 1  - June 15 (start 11:00 end 17:00)
 - (11:00-12:00) Course introduction [Sagar Dolas (SURF)]
