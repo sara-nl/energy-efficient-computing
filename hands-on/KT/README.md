@@ -1,6 +1,12 @@
 
 # Kernel Tuner
 
+## Day 2 Course Reservation (energy_efficiency_course_gpu)
+
+```
+salloc --gpus-per-node=1 -t 01:00:00 -p gpu --reservation=energy_efficiency_course_gpu
+```
+
 ## Installing Kernel Tuner
 
 First we need to load the appropriate modules on Snellius.
