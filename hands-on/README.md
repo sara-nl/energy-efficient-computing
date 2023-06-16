@@ -49,11 +49,7 @@ salloc --ntasks=32 -t 02:00:00 -p thin --reservation=energy_efficiency_course_cp
 ### Day 2 (energy_efficiency_course_cpu and energy_efficiency_course_gpu)
 
 ```
-salloc --ntasks=32 -t 02:00:00 -p thin --reservation=energy_efficiency_course_cpu --constraint=hwperf
-```
-AND
-```
-salloc --ntasks=32 -t 02:00:00 -p thin --reservation=energy_efficiency_course_gpu --constraint=hwperf
+salloc --gpus-per-node=1 -t 01:00:00 -p gpu --reservation=energy_efficiency_course_gpu 
 ```
 
 ---
