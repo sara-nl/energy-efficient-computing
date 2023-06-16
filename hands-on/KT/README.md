@@ -9,6 +9,8 @@ First we need to load the appropriate modules on Snellius.
 module purge
 module load 2022
 module load foss/2022a
+module load CUDA/11.7.0
+module load Python/3.10.4-GCCcore-11.3.0
 ```
 
 After the appropriate modules are loaded, we can install the Python packages that we need today.
