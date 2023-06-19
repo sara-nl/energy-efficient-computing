@@ -24,7 +24,7 @@ for infile in sys.argv[1:]:
     Joule.append(data[2])  
     Watt.append(data[3])
 
-    Freq.append(int(infile.split("_")[2].split(".")[0]))
+    Freq.append(int(infile.split("_")[3].split(".")[0]))
 
 Size  = np.array(Size)
 Time  = np.array(Time)
