@@ -310,7 +310,7 @@ How to compile a c++ source code with PMT library: All you need to do is load th
 module purge
 module load 2022
 module load foss/2022a
-module load pmt/1.1.0-foss-2022a
+module load pmt/1.1.0-GCCcore-11.3.0
 
 g++ -fopenmp -lpmt mat_mul_pmt.cpp -o mat_mul_pmt
 ```

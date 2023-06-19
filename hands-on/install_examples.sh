@@ -17,7 +17,7 @@ module load foss/2022a
 gcc -fopenmp mat_mul.c -o ../bin/mat_mul
 gcc -fopenmp saxpy.c -o ../bin/saxpy
 
-module load pmt/1.1.0-foss-2022a
+module load pmt/1.1.0-GCCcore-11.3.0
 
 g++ -fopenmp -lpmt -fpermissive mat_mul_pmt.cpp -o ../bin/mat_mul_pmt
 
