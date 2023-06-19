@@ -1,8 +1,9 @@
 #!/bin/bash
 
-#SBATCH -p thin
-#SBATCH -n 128
-#SBATCH -t 00:30:00
+#SBATCH -p gpu
+#SBATCH --gpus-per-nod=4
+#SBATCH -n 72
+#SBATCH -t 00:59:00
 #SBATCH --exclusive 
 #SBATCH --constraint=hwperf
 #SBATCH --output=job_dvfs_example_2.out
@@ -14,10 +15,11 @@ module load 2022
 module load foss/2022a
 module load pmt/1.1.0-GCCcore-11.3.0
 
-#warning largest known usage, 3500 x 3500 ... PMT throws a seg fault at values larger than this.
-matrix_size=3000
+#warning largest known usage, 3500 x 3500 ... PMT throws a seg fault at values larger than this on AMD EPYC (ROME)
+matrix_size=10000
 
-for frequency in {1500000..2600000..100000}
+#for frequency in {1500000..2600000..100000} #AMD EPYC 7H12 64-Core Processor
+for frequency in {1300000..2400000..100000} #Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz
 do
 
     # specify the results to append
