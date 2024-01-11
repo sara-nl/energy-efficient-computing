@@ -4,20 +4,27 @@
 #include <time.h> // needed for clock() and CLOCKS_PER_SEC etc
 #include "helper.h" // local helper header to clean up code
 
+#ifdef USE_DOUBLE
+typedef double X_TYPE;
+#elif USE_SINGLE
+typedef float X_TYPE;
+#endif
 
-void initialize_matrices(float** A, float** B, float** C, int ROWS, int COLUMNS){
+
+
+void initialize_matrices(X_TYPE** A, X_TYPE** B, X_TYPE** C, int ROWS, int COLUMNS){
     for (int i = 0 ; i < ROWS ; i++)
     {
         for (int j = 0 ; j < COLUMNS ; j++)
         {
-            A[i][j] = (float) rand() / RAND_MAX ;
-            B[i][j] = (float) rand() / RAND_MAX ;
+            A[i][j] = (X_TYPE) rand() / RAND_MAX ;
+            B[i][j] = (X_TYPE) rand() / RAND_MAX ;
             C[i][j] = 0.0 ;
         }
     }
 }
 
-void simple_matrix_multiply(float** A, float** B, float** C, int ROWS, int COLUMNS){
+void simple_matrix_multiply(X_TYPE** A, X_TYPE** B, X_TYPE** C, int ROWS, int COLUMNS){
     
     printf("(Simple) Matix Multiplication of 2D matricies of equal sizes (%d, %d)\n",ROWS,COLUMNS);
 
@@ -33,7 +40,7 @@ void simple_matrix_multiply(float** A, float** B, float** C, int ROWS, int COLUM
     }
 }
 
-void openmp_matrix_multiply(float** A, float** B, float** C, int ROWS, int COLUMNS){
+void openmp_matrix_multiply(X_TYPE** A, X_TYPE** B, X_TYPE** C, int ROWS, int COLUMNS){
     
     int num_threads = omp_get_max_threads();
     
@@ -70,9 +77,9 @@ int main( int argc, char *argv[] )  {
   ROWS = N;
   COLUMNS = N;
   /* declare the arrays */
-  float **A;
-  float **B;
-  float **C;
+  X_TYPE **A;
+  X_TYPE **B;
+  X_TYPE **C;
 
   /* allocate the arrays */
   A = malloc(ROWS * sizeof *A);

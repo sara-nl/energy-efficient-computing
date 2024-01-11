@@ -11,7 +11,7 @@ project(
   VERSION 1.0
   LANGUAGES C)
 
-  # Find packages go here.
+# Find packages go here.
 add_subdirectory(src)
 include_directories(".")
 
