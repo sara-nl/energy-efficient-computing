@@ -22,7 +22,7 @@ target_link_libraries(sgemm HELPER_LIB)
 add_executable(saxpy axpy.c)
 target_link_libraries(saxpy HELPER_LIB)
 
-install(TARGETS dgemm sgemm daxpy saxpy
+install(TARGETS dgemm sgemm daxpy saxpy 
     RUNTIME
     DESTINATION ${PROJECT_SOURCE_DIR}/bin
     )
