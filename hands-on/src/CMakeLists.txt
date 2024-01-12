@@ -3,7 +3,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/)
 add_library(HELPER_LIB INTERFACE)
 target_include_directories(HELPER_LIB INTERFACE {CMAKE_CURRENT_SOURCE_DIR})
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -fopenmp")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -fopenmp -march=native")
 
 # compile the double precision binaries
 add_executable(dgemm xgemm.c)
