@@ -4,6 +4,7 @@
 #include <string.h> // needed for strcmp
 #include <stdbool.h> // needed for bool usage
 
+
 void print_saxpy_usage()
 {
     fprintf(stderr, "saxpy (array size) [-s|-p|-h]\n");

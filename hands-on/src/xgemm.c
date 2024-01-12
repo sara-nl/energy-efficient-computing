@@ -6,11 +6,9 @@
 
 #ifdef USE_DOUBLE
 typedef double X_TYPE;
-#elif USE_SINGLE
+#else
 typedef float X_TYPE;
 #endif
-
-
 
 void initialize_matrices(X_TYPE** A, X_TYPE** B, X_TYPE** C, int ROWS, int COLUMNS){
     for (int i = 0 ; i < ROWS ; i++)
@@ -66,7 +64,7 @@ int main( int argc, char *argv[] )  {
   int ROWS;
   int COLUMNS;
   int N;
-
+  
   /* DUMB bools needed for the argument parsing logic */
   bool openmp = false;
   bool simple = true;

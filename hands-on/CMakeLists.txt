@@ -15,3 +15,5 @@ project(
 add_subdirectory(src)
 include_directories(".")
 
+set(CMAKE_C_FLAGS "-O3")
+

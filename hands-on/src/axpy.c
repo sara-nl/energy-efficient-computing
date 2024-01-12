@@ -3,10 +3,9 @@
 #include <time.h> // needed for clock() and CLOCKS_PER_SEC etc
 #include "helper.h" // local helper header to clean up code
 
-
 #ifdef USE_DOUBLE
 typedef double X_TYPE;
-#elif USE_SINGLE
+#else
 typedef float X_TYPE;
 #endif
 
@@ -42,9 +41,13 @@ int main( int argc, char *argv[] )  {
     /* VERY DUMB Argument Parsers */
     N = parse_arguments(argc, argv, &simple, &openmp, &sanity_check);
 
-    X_TYPE sx[N]; /* n is an array of N integers */
-    X_TYPE sy[N]; /* n is an array of N integers */
+    X_TYPE *sx; /* n is an array of N integers */
+    X_TYPE *sy; /* n is an array of N integers */
 
+    sx = malloc(N * sizeof (X_TYPE));
+    sy = malloc(N * sizeof (X_TYPE));
+
+    printf("X_TYPE size is (%d)\n",sizeof (X_TYPE));
     /* Simple saxpy */
     /*==============================*/
     if (true == simple)
