@@ -78,9 +78,6 @@ int main( int argc, char *argv[] )  {
   X_TYPE** A = (X_TYPE**)malloc(ROWS * sizeof( X_TYPE* ));
   X_TYPE** B = (X_TYPE**)malloc(ROWS * sizeof( X_TYPE* ));
   X_TYPE** C = (X_TYPE**)malloc(ROWS * sizeof( X_TYPE* ));
-  //X_TYPE **C;
-
-    //int** arr = (int**)malloc(r * sizeof(int*));
 
     for (int i =0; i <ROWS; i++)
     {
@@ -88,19 +85,6 @@ int main( int argc, char *argv[] )  {
         B[i] = (X_TYPE*)malloc(COLUMNS * sizeof(X_TYPE));
         C[i] = (X_TYPE*)malloc(COLUMNS * sizeof(X_TYPE));
     }
-
-  /* allocate the arrays */
-  //A = malloc(ROWS * sizeof *A);
-  //B = malloc(ROWS * sizeof *B);
-  //C = malloc(ROWS * sizeof *C);
-  //for (int i=0; i<ROWS; i++)
-  //{
-  //  A[i] = malloc(COLUMNS * sizeof *A[i]);
-  //  B[i] = malloc(COLUMNS * sizeof *B[i]);
-  //  C[i] = malloc(COLUMNS * sizeof *C[i]);
-  //}
-
-
 
   /*======================================================================*/
   /*                START of Section of the code that matters!!!          */
