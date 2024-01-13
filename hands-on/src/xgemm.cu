@@ -18,22 +18,20 @@ void initialize_matrices(X_TYPE* A, X_TYPE* B, X_TYPE* C, int ROWS, int COLUMNS)
             C[i] = 0.0 ;
         }
 }
-__global__ void simple_matrix_multiply(X_TYPE** A, X_TYPE** B, X_TYPE** C, int ROWS, int COLUMNS){
+__global__ void simple_matrix_multiply(X_TYPE* D_A, X_TYPE* D_B, X_TYPE* D_C, int ROWS, int COLUMNS){
     
-    printf("(Simple) Matix Multiplication of 2D matricies of equal sizes (%d, %d)\n",ROWS,COLUMNS);
-
-    for(int i=0;i<ROWS;i++)
-    {
-        for(int j=0;j<COLUMNS;j++)
-        {
-            for(int k=0;k<COLUMNS;k++)
-            {
-                C[i][j] += A[i][k]*B[k][j];
-            }
-        }
-    }
+    int local_COLUMN = threadIdx.x + blockIdx.x * blockDim.x;
+		int local_ROW = threadIdx.y + blockIdx.y * blockDim.y;
+		int local_index = local_COLUMN + local_ROW * ROWS; // Right now this only works for symetric matricies
+		int tmp = 0;  
+    
+    if(local_ROW < ROWS && local_COLUMN < COLUMNS){
+			for(int k=0; k<COLUMNS; k++){
+				tmp += D_A[local_ROW * ROWS + k] * D_B[k * COLUMNS + local_COLUMN];
+			}
+			D_C[local_index] = tmp;
+		}
 }
-
 
 
 int main( int argc, char *argv[] )  {
@@ -61,39 +59,54 @@ int main( int argc, char *argv[] )  {
     X_TYPE* C = (X_TYPE*)malloc((ROWS * COLUMNS) * sizeof(X_TYPE));
 
   // Then Allocate them on the GPUs
- // Allocate device memory for a
-    cudaMalloc((void**)&d_a, sizeof(float) * N);
+  X_TYPE* D_A;
+  X_TYPE* D_B;
+  X_TYPE* D_C;
+  cudaMalloc((void**)&D_A, sizeof( X_TYPE ) * (ROWS * COLUMNS));
+  cudaMalloc((void**)&D_B, sizeof( X_TYPE ) * (ROWS * COLUMNS));
+  cudaMalloc((void**)&D_C, sizeof( X_TYPE ) * (ROWS * COLUMNS));
 
-    // Transfer data from host to device memory
-    cudaMemcpy(d_a, a, sizeof(float) * N, cudaMemcpyHostToDevice);
-    
   /* initialize the arrays */
+  clock_t t; // declare clock_t (long type)
+  t = clock(); // start the clock
+
   initialize_matrices(A, B, C, ROWS, COLUMNS);
+
+  t = clock() - t; // stop the clock
+  
+  double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
+  
+  printf("Initialization Time: %f sec\n",time_taken);
 
   /*======================================================================*/
   /*                START of Section of the code that matters!!!          */
   /*======================================================================*/
 
-
-
   /* Simple matrix multiplication */
   /*==============================*/
   if (true == simple)
   {
+
     clock_t t; // declare clock_t (long type)
     t = clock(); // start the clock
 
-   // Transfer data from host to device memory
-    cudaMemcpy(d_a, a, sizeof(float) * N, cudaMemcpyHostToDevice);
+    // Transfer data from host to device memory
+    cudaMemcpy(D_A, A, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyHostToDevice);
+    cudaMemcpy(D_B, B, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyHostToDevice);
+    //cudaMemcpy(D_C, C, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyHostToDevice);
     
-    simple_matrix_multiply<<<1,1>>>(A, B, C, ROWS, COLUMNS);
-    
+    int block_size = 512;
+    int grid_size = ((ROWS + block_size) / block_size);
+    simple_matrix_multiply<<<grid_size,block_size>>>(D_A, D_B, D_C, ROWS, COLUMNS);
+
+  // Transfer data from device to host memory
+    cudaMemcpy(C, D_C, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyDeviceToHost);
+
     t = clock() - t; // stop the clock
 
     double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
-    printf("TIME: %f sec\n",time_taken);
+    printf("GPU Compute Time: %f sec\n",time_taken);
   }
-
 
 
   /* OpenMP parallel matrix multiplication */
@@ -108,13 +121,12 @@ int main( int argc, char *argv[] )  {
   /*                 END of Section of the code that matters!!!           */
   /*======================================================================*/
 
-  /* deallocate the arrays */
-  for (int i=0; i<ROWS; i++)
-  {
-    free(A[i]);
-    free(B[i]);
-    free(C[i]);
-  }
+ // Deallocate device memory
+    cudaFree(D_A);
+    cudaFree(D_B);
+    cudaFree(D_C);
+
+  // Deallocate host memory
   free(A);
   free(B);
   free(C);
