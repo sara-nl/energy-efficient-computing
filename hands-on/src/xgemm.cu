@@ -3,6 +3,7 @@
 #include <omp.h> // needed for OpenMP 
 #include <time.h> // needed for clock() and CLOCKS_PER_SEC etc
 #include "helper.h" // local helper header to clean up code
+#include <curand.h>
 
 #ifdef USE_DOUBLE
 typedef double X_TYPE;
@@ -18,6 +19,8 @@ void initialize_matrices(X_TYPE* A, X_TYPE* B, X_TYPE* C, int ROWS, int COLUMNS)
             C[i] = 0.0 ;
         }
 }
+
+
 __global__ void simple_matrix_multiply(X_TYPE* D_A, X_TYPE* D_B, X_TYPE* D_C, int ROWS, int COLUMNS){
     
     int local_COLUMN = threadIdx.x + blockIdx.x * blockDim.x;
@@ -50,7 +53,6 @@ int main( int argc, char *argv[] )  {
   ROWS = N;
   COLUMNS = N;
 
-
   /* declare the arrays...  better to do it as 1D arrays for CUDA */
 
   // First allocated them on the host (CPU)
@@ -66,17 +68,37 @@ int main( int argc, char *argv[] )  {
   cudaMalloc((void**)&D_B, sizeof( X_TYPE ) * (ROWS * COLUMNS));
   cudaMalloc((void**)&D_C, sizeof( X_TYPE ) * (ROWS * COLUMNS));
 
-  /* initialize the arrays */
-  clock_t t; // declare clock_t (long type)
-  t = clock(); // start the clock
+  // We are going to actuall 
+  //size_t n = 100;
+  //size_t i;
+    clock_t t; // declare clock_t (long type)
+    t = clock(); // start the clock
 
-  initialize_matrices(A, B, C, ROWS, COLUMNS);
+  curandGenerator_t gen;
+  //float *devData, *hostData;
+  /* Allocate n floats on host */
+  //hostData = (float *)calloc(n, sizeof(float));
+  /* Allocate n floats on device */
+  //CUDA_CALL(cudaMalloc((void **)&devData, n*sizeof(float)));
+  /* Create pseudo-random number generator */
+  curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_DEFAULT);
+  /* Set seed */
+  curandSetPseudoRandomGeneratorSeed(gen, 1234ULL);
+  /* Generate n floats on device */
+  if (sizeof(X_TYPE) == 8) {
+    curandGenerateUniformDouble(gen, D_A, (ROWS * COLUMNS));
+    curandGenerateUniformDouble(gen, D_B, (ROWS * COLUMNS));
+  }else{
+    curandGenerateUniform(gen, D_A, (ROWS * COLUMNS));
+    curandGenerateUniform(gen, D_B, (ROWS * COLUMNS));    
+  }
+  /* Copy device memory to host */
+  cudaMemcpy(A, D_A, sizeof(X_TYPE) * (ROWS * COLUMNS),cudaMemcpyDeviceToHost);
+  cudaMemcpy(B, D_B, sizeof(X_TYPE) * (ROWS * COLUMNS),cudaMemcpyDeviceToHost);
 
-  t = clock() - t; // stop the clock
-  
-  double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
-  
-  printf("Initialization Time: %f sec\n",time_taken);
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
+    printf("GPU Init Time: %f sec\n",time_taken); 
+
 
   /*======================================================================*/
   /*                START of Section of the code that matters!!!          */
@@ -86,25 +108,23 @@ int main( int argc, char *argv[] )  {
   /*==============================*/
   if (true == simple)
   {
+    int block_size = 512;
+    int grid_size = ((ROWS + block_size) / block_size);
 
-    clock_t t; // declare clock_t (long type)
     t = clock(); // start the clock
 
     // Transfer data from host to device memory
     cudaMemcpy(D_A, A, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyHostToDevice);
     cudaMemcpy(D_B, B, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyHostToDevice);
-    //cudaMemcpy(D_C, C, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyHostToDevice);
     
-    int block_size = 512;
-    int grid_size = ((ROWS + block_size) / block_size);
     simple_matrix_multiply<<<grid_size,block_size>>>(D_A, D_B, D_C, ROWS, COLUMNS);
 
-  // Transfer data from device to host memory
+   // Transfer data from device to host memory
     cudaMemcpy(C, D_C, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyDeviceToHost);
 
     t = clock() - t; // stop the clock
 
-    double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
+    time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
     printf("GPU Compute Time: %f sec\n",time_taken);
   }
 
