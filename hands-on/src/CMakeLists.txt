@@ -39,7 +39,7 @@ install(TARGETS dgemm sgemm daxpy saxpy
     )
 
 if (ENABLE_CUDA)
-    set(CMAKE_CUDA_FLAGS "-gencode arch=compute_80,code=sm_80 -lineinfo --ptxas-options=-v --disable-warnings -Xcompiler -fopenmp")
+    set(CMAKE_CUDA_FLAGS "-gencode arch=compute_80,code=sm_80 -lineinfo --ptxas-options=-v --disable-warnings")
     
     #DOUBLE PRECISION
     add_executable(dgemm_gpu xgemm.cu)
@@ -47,12 +47,21 @@ if (ENABLE_CUDA)
     target_link_libraries(dgemm_gpu HELPER_LIB)
     target_compile_definitions(dgemm_gpu PUBLIC USE_DOUBLE)
 
+    add_executable(daxpy_gpu axpy.cu)
+    target_link_options(daxpy_gpu PUBLIC "-fopenmp")
+    target_link_libraries(daxpy_gpu HELPER_LIB)
+    target_compile_definitions(daxpy_gpu PUBLIC USE_DOUBLE)
+
     #SINGLE PRECISION
     add_executable(sgemm_gpu xgemm.cu)
     target_link_options(sgemm_gpu PUBLIC "-fopenmp")
     target_link_libraries(sgemm_gpu HELPER_LIB)
+
+    add_executable(saxpy_gpu axpy.cu)
+    target_link_options(saxpy_gpu PUBLIC "-fopenmp")
+    target_link_libraries(saxpy_gpu HELPER_LIB)
     
-    install(TARGETS dgemm_gpu sgemm_gpu # daxpy_gpu saxpy_gpu
+    install(TARGETS dgemm_gpu sgemm_gpu daxpy_gpu saxpy_gpu
     RUNTIME
     DESTINATION ${PROJECT_SOURCE_DIR}/bin
     )
