@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.26.3)
 project(
   EnergyEfficientComputing
   VERSION 1.0
-  LANGUAGES C)
+  LANGUAGES C CUDA)
 
 # Find packages go here.
 add_subdirectory(src)
