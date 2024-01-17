@@ -39,6 +39,7 @@ install(TARGETS dgemm sgemm daxpy saxpy
     )
 
 if (ENABLE_CUDA)
+    enable_language(CUDA)
     set(CMAKE_CUDA_FLAGS "-gencode arch=compute_80,code=sm_80 -lineinfo --ptxas-options=-v --disable-warnings")
     
     #DOUBLE PRECISION
@@ -62,6 +63,31 @@ if (ENABLE_CUDA)
     target_link_libraries(saxpy_gpu HELPER_LIB)
     
     install(TARGETS dgemm_gpu sgemm_gpu daxpy_gpu saxpy_gpu
+    RUNTIME
+    DESTINATION ${PROJECT_SOURCE_DIR}/bin
+    )
+
+endif()
+
+
+if (ENABLE_HIP)
+    enable_language(HIP)
+    list(APPEND CMAKE_PREFIX_PATH /opt/rocm/hip /opt/rocm)
+    
+    find_package(hip REQUIRED)
+
+    set(CMAKE_CXX_COMPILER ${HIP_HIPCC_EXECUTABLE})
+    set(CMAKE_CXX_LINKER   ${HIP_HIPCC_EXECUTABLE})
+
+    #DOUBLE PRECISION
+    add_executable(dgemm_gpu xgemm.hip)
+
+    # Link Libraries - HIP Device and OpenMP.
+    target_link_options(dgemm_gpu PUBLIC "-fopenmp")
+    target_link_libraries(dgemm_gpu HELPER_LIB)
+
+
+    install(TARGETS dgemm_gpu 
     RUNTIME
     DESTINATION ${PROJECT_SOURCE_DIR}/bin
     )
