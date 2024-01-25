@@ -72,9 +72,13 @@ endif()
 
 if (ENABLE_HIP)
     enable_language(HIP)
+
+
     list(APPEND CMAKE_PREFIX_PATH /opt/rocm/hip /opt/rocm)
-    
+
     find_package(hip REQUIRED)
+    set(HIP_PATH "/opt/rocm/hip" CACHE PATH "Path to which HIP has been installed")
+    set(CMAKE_HIP_FLAGS "--offload-arch=gfx90a")
 
     set(CMAKE_CXX_COMPILER ${HIP_HIPCC_EXECUTABLE})
     set(CMAKE_CXX_LINKER   ${HIP_HIPCC_EXECUTABLE})
