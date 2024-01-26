@@ -71,8 +71,8 @@ endif()
 
 
 if (ENABLE_HIP)
-    enable_language(HIP)
 
+   enable_language(HIP)
 
     list(APPEND CMAKE_PREFIX_PATH /opt/rocm/hip /opt/rocm)
 
@@ -85,13 +85,19 @@ if (ENABLE_HIP)
 
     #DOUBLE PRECISION
     add_executable(dgemm_gpu xgemm.hip)
-
     # Link Libraries - HIP Device and OpenMP.
     target_link_options(dgemm_gpu PUBLIC "-fopenmp")
     target_link_libraries(dgemm_gpu HELPER_LIB)
+    target_compile_definitions(dgemm_gpu PUBLIC USE_DOUBLE)    
+
+    #SINGLE PRECISION
+    add_executable(sgemm_gpu xgemm.hip)
+    # Link Libraries - HIP Device and OpenMP.
+    target_link_options(sgemm_gpu PUBLIC "-fopenmp")
+    target_link_libraries(sgemm_gpu HELPER_LIB)
 
 
-    install(TARGETS dgemm_gpu 
+    install(TARGETS dgemm_gpu sgemm_gpu 
     RUNTIME
     DESTINATION ${PROJECT_SOURCE_DIR}/bin
     )
