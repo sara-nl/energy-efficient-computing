@@ -3,6 +3,9 @@
 #include <omp.h> // needed for OpenMP 
 #include <time.h> // needed for clock() and CLOCKS_PER_SEC etc
 #include "helper.h" // local helper header to clean up code
+#include <pmt.h> // needed for PMT
+#include<iostream> // needed for CPP IO ... cout, endl etc etc
+
 
 #ifdef USE_DOUBLE
 typedef double X_TYPE;
@@ -60,7 +63,7 @@ void openmp_matrix_multiply(X_TYPE** A, X_TYPE** B, X_TYPE** C, int ROWS, int CO
 
 
 int main( int argc, char *argv[] )  {
-    
+
     printf("X_TYPE size is (%d) bytes \n",sizeof (X_TYPE));
 
   int ROWS;
@@ -95,34 +98,48 @@ int main( int argc, char *argv[] )  {
   /* initialize the arrays */
   initialize_matrices(A, B, C, ROWS, COLUMNS);
 
+    // THIS IS NEW !!!!!!!
+    auto sensor = pmt::rapl::Rapl::Create();
+
   /* Simple matrix multiplication */
   /*==============================*/
   if (true == simple)
   {
-    clock_t t; // declare clock_t (long type)
-    t = clock(); // start the clock
-    
+    //Start the PMT "sensor"
+    auto start = sensor->Read();
+
     simple_matrix_multiply(A, B, C, ROWS, COLUMNS);
     
-    t = clock() - t; // stop the clock
+    //End the PMT "sensor"
+    auto end = sensor->Read();
 
-    double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
-    printf("TIME: %f sec\n",time_taken);
+    /// SORRY FOR THE CPP !!!!! BUT WE ARE JUST PRINTING!!!!
+    std::cout << " RESULTS-------" << std::endl;
+    std::cout << " PMT Seconds: " << pmt::PMT::seconds(start, end) << " s"<< std::endl;
+    std::cout << " PMT Joules: " << pmt::PMT::joules(start, end) << " J" << std::endl;
+    std::cout << " PMT Watts: " << pmt::PMT::watts(start, end) << " W" << std::endl;
+
+
   }
-
-
 
   /* OpenMP parallel matrix multiplication */
   /*=======================================*/
   if (true == openmp)
   {
-    // omp_get_wtime needed here because clock will sum up time for all threads
-    double start = omp_get_wtime();  
+    //Start the PMT "sensor"
+    auto start = sensor->Read();
 
     openmp_matrix_multiply(A, B, C, ROWS, COLUMNS);
     
-    double end = omp_get_wtime(); 
-    printf("TIME: %f sec\n",(end-start));
+    //End the PMT "sensor"
+    auto end = sensor->Read();
+
+    /// SORRY FOR THE CPP !!!!! BUT WE ARE JUST PRINTING!!!!
+    std::cout << " RESULTS-------" << std::endl;
+    std::cout << " PMT Seconds: " << pmt::PMT::seconds(start, end) << " s"<< std::endl;
+    std::cout << " PMT Joules: " << pmt::PMT::joules(start, end) << " J" << std::endl;
+    std::cout << " PMT Watts: " << pmt::PMT::watts(start, end) << " W" << std::endl;
+
   }
 
   /*======================================================================*/

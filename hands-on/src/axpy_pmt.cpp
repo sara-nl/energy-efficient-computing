@@ -2,6 +2,8 @@
 #include <omp.h> // needed for OpenMP 
 #include <time.h> // needed for clock() and CLOCKS_PER_SEC etc
 #include "helper.h" // local helper header to clean up code
+#include <pmt.h> // needed for PMT
+#include<iostream> // needed for CPP IO ... cout, endl etc etc
 
 #ifdef USE_DOUBLE
 typedef double X_TYPE;
@@ -49,18 +51,27 @@ int main( int argc, char *argv[] )  {
     sx = malloc(N * sizeof (X_TYPE));
     sy = malloc(N * sizeof (X_TYPE));
 
+    // THIS IS NEW !!!!!!!
+    auto sensor = pmt::rapl::Rapl::Create();
+        
     /* Simple saxpy */
     /*==============================*/
     if (true == simple)
     {
-      clock_t t; // declare clock_t (long type)
-      t = clock(); // start the clock
+
+    //Start the PMT "sensor"
+    auto start = sensor->Read();
     
-      simple_axpy(N, 2.0, sx, sy);
-    
-      t = clock() - t; // stop the clock    
-      double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
-      printf("TIME: %f sec\n",time_taken);
+    simple_axpy(N, 2.0, sx, sy);
+
+    //End the PMT "sensor"
+    auto end = sensor->Read();
+
+    /// SORRY FOR THE CPP !!!!! BUT WE ARE JUST PRINTING!!!!
+    std::cout << " RESULTS-------" << std::endl;
+    std::cout << " PMT Seconds: " << pmt::PMT::seconds(start, end) << " s"<< std::endl;
+    std::cout << " PMT Joules: " << pmt::PMT::joules(start, end) << " J" << std::endl;
+    std::cout << " PMT Watts: " << pmt::PMT::watts(start, end) << " W" << std::endl;
     }
 
     /* OpenMP parallel saxpy */
@@ -68,13 +79,19 @@ int main( int argc, char *argv[] )  {
     if (true == openmp)
     {
 
-    // omp_get_wtime needed here because clock will sum up time for all threads
-    double start = omp_get_wtime();  
+    //Start the PMT "sensor"
+    auto start = sensor->Read();
 
     openmp_axpy(N, 2.0, sx, sy);
     
-    double end = omp_get_wtime(); 
-    printf("TIME: %f sec\n",(end-start));
+    //End the PMT "sensor"
+    auto end = sensor->Read();
+
+    /// SORRY FOR THE CPP !!!!! BUT WE ARE JUST PRINTING!!!!
+    std::cout << " RESULTS-------" << std::endl;
+    std::cout << " PMT Seconds: " << pmt::PMT::seconds(start, end) << " s"<< std::endl;
+    std::cout << " PMT Joules: " << pmt::PMT::joules(start, end) << " J" << std::endl;
+    std::cout << " PMT Watts: " << pmt::PMT::watts(start, end) << " W" << std::endl;
 
     }
 
