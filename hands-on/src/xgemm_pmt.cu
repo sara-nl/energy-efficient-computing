@@ -3,6 +3,9 @@
 #include <omp.h> // needed for OpenMP 
 #include <time.h> // needed for clock() and CLOCKS_PER_SEC etc
 #include "helper.h" // local helper header to clean up code
+#include <pmt.h> // needed for PMT
+#include<iostream> // needed for CPP IO ... cout, endl etc etc
+
 
 #ifdef USE_DOUBLE
 typedef double X_TYPE;
@@ -45,7 +48,6 @@ int main( int argc, char *argv[] )  {
   int ROWS;
   int COLUMNS;
   int N;
-  clock_t t; // declare clock_t (long type)
 
   /* DUMB bools needed for the argument parsing logic */
   bool openmp = false;
@@ -79,6 +81,9 @@ int main( int argc, char *argv[] )  {
   double end = omp_get_wtime(); 
   printf("Init TIME: %f sec\n",(end-start));
 
+    // THIS IS NEW !!!!!!!
+  auto GPUsensor = pmt::nvml::NVML::Create();
+  auto CPUsensor = pmt::rapl::Rapl::Create();
 
   /*======================================================================*/
   /*                START of Section of the code that matters!!!          */
@@ -89,7 +94,9 @@ int main( int argc, char *argv[] )  {
     int block_size = 512;
     int grid_size = ((ROWS + block_size) / block_size);
     
-    t = clock(); // start the clock
+    //Start the PMT "sensor"
+    auto GPUstart = GPUsensor->Read(); // READING the GPU via NVML
+    auto CPUstart = CPUsensor->Read(); // READING the CPU via RAPL
 
     // Transfer data from host to device memory
     cudaMemcpy(D_A, A, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyHostToDevice);
@@ -100,10 +107,18 @@ int main( int argc, char *argv[] )  {
    // Transfer data from device to host memory
     cudaMemcpy(C, D_C, sizeof(X_TYPE) * (ROWS * COLUMNS), cudaMemcpyDeviceToHost);
 
-    t = clock() - t; // stop the clock
 
-    double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
-    printf("GPU Compute Time: %f sec\n",time_taken);
+    //Start the PMT "sensor"
+    auto GPUend = GPUsensor->Read();
+    auto CPUend = CPUsensor->Read();
+
+    std::cout << " RESULTS-------" << std::endl;
+    std::cout << "CPU (RAPL) Seconds: " << pmt::PMT::seconds(CPUstart, CPUend) << " | GPU (NVML) Seconds: " << pmt::PMT::seconds(GPUstart, GPUend) << " s"<< std::endl;
+    std::cout << "CPU (RAPL) Joules: " << pmt::PMT::joules(CPUstart, CPUend) << " | GPU (NVML) Joules: " << pmt::PMT::joules(GPUstart, GPUend) << " J"<< std::endl;
+    std::cout << "CPU (RAPL) Watts: " << pmt::PMT::watts(CPUstart, CPUend) << " | GPU (NVML) Watts: " << pmt::PMT::watts(GPUstart, GPUend) << " W"<< std::endl;
+    std::cout << "Total Seconds: " << (pmt::PMT::seconds(CPUstart, CPUend) + pmt::PMT::seconds(GPUstart, GPUend))*0.5 << " s"<< std::endl;
+    std::cout << "Total Joules: " << (pmt::PMT::joules(CPUstart, CPUend) + pmt::PMT::joules(GPUstart, GPUend)) << " J"<< std::endl;
+    std::cout << "Total Watts: " << (pmt::PMT::watts(CPUstart, CPUend) + pmt::PMT::watts(GPUstart, GPUend)) << " W"<< std::endl;
 
   /*======================================================================*/
   /*                 END of Section of the code that matters!!!           */
