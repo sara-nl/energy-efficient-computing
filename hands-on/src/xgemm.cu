@@ -42,6 +42,9 @@ __global__ void simple_matrix_multiply(X_TYPE* D_A, X_TYPE* D_B, X_TYPE* D_C, in
 
 int main( int argc, char *argv[] )  {
 
+    printf("X_TYPE size is (%d) bytes \n",sizeof (X_TYPE));
+
+
   int ROWS;
   int COLUMNS;
   int N;
