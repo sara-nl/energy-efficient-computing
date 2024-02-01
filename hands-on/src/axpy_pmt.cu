@@ -99,7 +99,7 @@ int main( int argc, char *argv[] )  {
         auto GPUend = GPUsensor->Read();
         auto CPUend = CPUsensor->Read();
 
-        std::cout << " RESULTS-------" << std::endl;
+        std::cout << "SIZE: " << N << std::endl;
         std::cout << "CPU (RAPL) Seconds: " << pmt::PMT::seconds(CPUstart, CPUend) << " | GPU (NVML) Seconds: " << pmt::PMT::seconds(GPUstart, GPUend) << " s"<< std::endl;
         std::cout << "CPU (RAPL) Joules: " << pmt::PMT::joules(CPUstart, CPUend) << " | GPU (NVML) Joules: " << pmt::PMT::joules(GPUstart, GPUend) << " J"<< std::endl;
         std::cout << "CPU (RAPL) Watts: " << pmt::PMT::watts(CPUstart, CPUend) << " | GPU (NVML) Watts: " << pmt::PMT::watts(GPUstart, GPUend) << " W"<< std::endl;

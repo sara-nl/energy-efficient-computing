@@ -114,10 +114,10 @@ int main( int argc, char *argv[] )  {
     auto end = sensor->Read();
 
     /// SORRY FOR THE CPP !!!!! BUT WE ARE JUST PRINTING!!!!
-    std::cout << " RESULTS-------" << std::endl;
-    std::cout << " PMT Seconds: " << pmt::PMT::seconds(start, end) << " s"<< std::endl;
-    std::cout << " PMT Joules: " << pmt::PMT::joules(start, end) << " J" << std::endl;
-    std::cout << " PMT Watts: " << pmt::PMT::watts(start, end) << " W" << std::endl;
+    std::cout << "SIZE: " << ROWS <<std::endl;
+    std::cout << "PMT Seconds: " << pmt::PMT::seconds(start, end) << " s"<< std::endl;
+    std::cout << "PMT Joules: " << pmt::PMT::joules(start, end) << " J" << std::endl;
+    std::cout << "PMT Watts: " << pmt::PMT::watts(start, end) << " W" << std::endl;
 
 
   }
@@ -135,10 +135,10 @@ int main( int argc, char *argv[] )  {
     auto end = sensor->Read();
 
     /// SORRY FOR THE CPP !!!!! BUT WE ARE JUST PRINTING!!!!
-    std::cout << " RESULTS-------" << std::endl;
-    std::cout << " PMT Seconds: " << pmt::PMT::seconds(start, end) << " s"<< std::endl;
-    std::cout << " PMT Joules: " << pmt::PMT::joules(start, end) << " J" << std::endl;
-    std::cout << " PMT Watts: " << pmt::PMT::watts(start, end) << " W" << std::endl;
+    std::cout << "SIZE: " << ROWS <<std::endl;
+    std::cout << "PMT Seconds: " << pmt::PMT::seconds(start, end) << " s"<< std::endl;
+    std::cout << "PMT Joules: " << pmt::PMT::joules(start, end) << " J" << std::endl;
+    std::cout << "PMT Watts: " << pmt::PMT::watts(start, end) << " W" << std::endl;
 
   }
 

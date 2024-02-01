@@ -60,6 +60,7 @@ int main( int argc, char *argv[] )  {
     
       t = clock() - t; // stop the clock    
       double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
+      printf("SIZE: %d\n",N);
       printf("TIME: %f sec\n",time_taken);
     }
 
@@ -73,7 +74,8 @@ int main( int argc, char *argv[] )  {
 
     openmp_axpy(N, 2.0, sx, sy);
     
-    double end = omp_get_wtime(); 
+    double end = omp_get_wtime();
+    printf("SIZE: %d\n",N);    
     printf("TIME: %f sec\n",(end-start));
 
     }

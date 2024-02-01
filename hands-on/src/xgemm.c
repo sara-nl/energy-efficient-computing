@@ -67,6 +67,8 @@ int main( int argc, char *argv[] )  {
   int COLUMNS;
   int N;
 
+  double time_taken=0;
+  
   /* DUMB bools needed for the argument parsing logic */
   bool openmp = false;
   bool simple = true;
@@ -106,7 +108,8 @@ int main( int argc, char *argv[] )  {
     
     t = clock() - t; // stop the clock
 
-    double time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
+    time_taken = ((double)t)/CLOCKS_PER_SEC; // convert to seconds (and long to double)
+    printf("SIZE: %d \n",ROWS);
     printf("TIME: %f sec\n",time_taken);
   }
 
@@ -122,7 +125,9 @@ int main( int argc, char *argv[] )  {
     openmp_matrix_multiply(A, B, C, ROWS, COLUMNS);
     
     double end = omp_get_wtime(); 
-    printf("TIME: %f sec\n",(end-start));
+    time_taken = (end-start);
+    printf("SIZE: %d \n",ROWS);
+    printf("TIME: %f sec\n",time_taken);    
   }
 
   /*======================================================================*/
