@@ -97,7 +97,7 @@ Nominal Perf ------>+-----------------------+                         +---------
 
 ### Goals of the course in a plot/s
 
-![GOALZ1](images/PvF.png)
+![GOALZ1](images/PETvFreq_MM_GROMACS_HEMEL_v2.png)
 
 
 <h2 id="linux">Linux tools</h2>
