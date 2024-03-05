@@ -19,7 +19,7 @@
 
  -  **Energy (Joule or KWh)** is the combination of current (I) and electric potential (V) that is delivered by a circuit. It can be thought of the amount of Power delivered by a circuit over a period of time... It is often measured in daily appliances (and your energy bill) as kilowatt-hour (kWh). 
 
-    - Energy required to run the Light house for a second .... 0.27 kWh
+    - Energy required to run the Light house for a minute .... 0.016 kWh
     - Energy required to run the reading light for an hour .... 0.015 kWh
 
 Do we optimize for Power or for Energy?
