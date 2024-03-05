@@ -95,7 +95,7 @@ Nominal Perf ------>+-----------------------+                         +---------
 
 ```
 
-### Goals of the course in a plot/s
+### Goals of the course in a plot
 
 ![GOALZ1](images/PETvFreq_MM_GROMACS_HEMEL_v2.png)
 
