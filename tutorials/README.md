@@ -1,4 +1,4 @@
-# Hands on Overview
+# Tutorial Overview
 
 ## Sessions
 1. [Monitoring tutorial](monitoring/README.md)
