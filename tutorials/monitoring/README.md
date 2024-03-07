@@ -291,7 +291,15 @@ print("seconds {}".format(pypmt.seconds(start, end)))
 
 #### It is available on Snellius
 
+```
+module load 2022
+module avail pmt
+
+pmt/1.2.0-GCCcore-11.3.0-CUDA-11.7.0    pmt/1.2.0-GCCcore-11.3.0
+```
+
 How to compile a c++ source code with PMT library: All you need to do is load the PMT module on Snellius and link to it ( `-lpmt`)  during compilation....
+
 ```
 module purge
 module load 2022
@@ -303,7 +311,12 @@ g++ -fopenmp -lpmt example_program.cpp -o example_program
 
 <h2 id="exercises">Exercises</h2>
 
-### 1. How does Performance, Power and Energy Scale?
+
+### 1. Monitor an Application with EAR.
+
+
+
+### 2. How does Performance, Power and Energy Scale?
 
 <div class="image-single-row">
           <img style="height:250px;width:30%" src="images/size_v_time.png"></img>
