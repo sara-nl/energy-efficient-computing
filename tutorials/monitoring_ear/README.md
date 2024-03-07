@@ -126,3 +126,11 @@ The image below illustrates the usage of EAR to show the characteristics of a va
 
 ![Application_char](../images/CPU_characterization_plot.png)
 
+
+<h2 id="exercises">Exercises</h2>
+
+### 1. Monitor an application with EAR
+
+### 2. Reduce energy usage of dgemm on a AMD genoa node.
+
+
