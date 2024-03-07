@@ -107,7 +107,7 @@ In order to get an overview of the CPU architecture of the physical (host) syste
 lscpu 
 ```
 
-You can look at the files that show you the current and available frequencies of your CPU. Lets look at CPU #0 for example....
+You can look at the device files that show you the current and available frequencies of your CPU. Lets look at CPU #0 for example....
 
 - List the available Freqs.
     - ``` cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies ```
@@ -155,7 +155,7 @@ AMD uProf is also installed on Snellius....
 
 ```
 module load 2022
-module load AMD-uProf/4.0.341
+module load AMD-uProf/4.1.424
 ```
 
 ```
@@ -198,7 +198,6 @@ List the available "system events" available from timechart
 AMDuProfCLI timechart --list
 ```
 
-
 ### Example Excersizes
 
 1. Profile specific core/s power and set the affinity of the program to the core..
@@ -208,18 +207,6 @@ AMDuProfCLI timechart --event core=0-3,power -o AMDuProf_output --interval 10 --
 2. Profile the Frequency?
 3. Profile Temperature?
 
-
-#### Helpful plotting script (plot_AMD_csv.py)
-
-There is a simple python plotting script that will convert `timechart.csv` to `timechart_plot.png`. Caveats are that it will only plot one event at a time.... i.e. ` --event core=0-5,frequency` will work BUT `--event core=0-5,frequency,power` WILL NOT.
-The script (`plot_AMD_csv.py`) is located in `~/energy-efficient-computing/hands-on/scripts`
-EXAMPLE USAGE:
-```
-python ../scripts/plot_AMD_csv.py AMDuProf_output/AMDuProf-mat_mul-Timechart_May-30-2023_16-01-36/timechart.csv
-```
-This will create a .png `timechart_plot.png` in the directory where the profile data is. In the example above that is `AMDuProf_output/AMDuProf-mat_mul-Timechart_May-30-2023_16-01-36/timechart_plot.png`
-
-
 ### LIKWID (“Like I Knew What I’m Doing.”)
 > https://github.com/RRZE-HPC/likwid
 
@@ -228,7 +215,7 @@ analogous to AMDuProf.
 module load 2022
 module load likwid/5.2.2-GCC-11.3.0
 
-likwid-perfctr -g ENERGY -C 1 ../bin/mat_mul 200 200
+likwid-perfctr -g ENERGY -C 1 ../bin/dgemm 500
  ```
 
 Since LIKWID is a non "native" AMD tool it requires a special daemon to access the readable and writeable MSR device files, https://github.com/RRZE-HPC/likwid/wiki/likwid-accessD . Since Snellius is a public shared (Mostly AMD machine) we will stick to the AMD tooling.
@@ -259,7 +246,7 @@ For the CPU part of this course we will showcase the Rapl functionality.
 #### C++ example:
 ```cpp
 #include <pmt.h> // needed for PMT
-#include<iostream> // needed for CPP IO ... cout, endl etc etc
+#include <iostream> // needed for CPP IO ... cout, endl etc etc
 
 // Initialize the Sensor
 auto sensor = pmt::rapl::Rapl::create();
@@ -302,7 +289,6 @@ print("seconds {}".format(pypmt.seconds(start, end)))
 
 ```
 
-
 #### It is available on Snellius
 
 How to compile a c++ source code with PMT library: All you need to do is load the PMT module on Snellius and link to it ( `-lpmt`)  during compilation....
@@ -312,16 +298,8 @@ module load 2022
 module load foss/2022a
 module load pmt/1.1.0-GCCcore-11.3.0
 
-g++ -fopenmp -lpmt mat_mul_pmt.cpp -o mat_mul_pmt
+g++ -fopenmp -lpmt example_program.cpp -o example_program
 ```
-Now run it and see what you observe.....
-```
-./bin/mat_mul_pmt 200 200
-```
-
--------
-
-
 
 <h2 id="exercises">Exercises</h2>
 
@@ -335,35 +313,4 @@ Now run it and see what you observe.....
 
 
 ### Steps to take:
-1. **Orient yourself to the `mat_mul_pmt` executable**:
-2. **Run the "energy study script:** 
-    ```
-    sh energy_monitoring_pmtstudy.sh
-    ```
-    This will output the results to the file `results.txt` 
-3. **Plot the results:**
-
-    You will need python as a plotting tool, which will read in `results.txt` and plot time, energy, and power in one png
-    ```
-    python ../scripts/plot_monitoring_pmtstudy.py results.txt 
-    ```
-    Also works....
-    ```
-    python ../scripts/plot_monitoring_pmtstudy.py results.txt results_two.txt results_three.txt
-    ```
-    The resulting plots will be stored in `time_energy_power.png`
-
-4. Can you Add more runs with varying OpenMP Threads to see how you can improve performance energy? HINT: Edit the `energy_monitoring_pmtstudy.sh` script to vary the output file ...`RESULTS_FILE=results_serial.txt`, and comment out the serial line in favor of the OpenMP line. See lines 30 and 31 of  `energy_monitoring_pmtstudy.sh`.
-        
-
-
-
-HINT: You will need python as a plotting tool, which will read in `results.txt` and plot time, energy, and power in one png
-
-```
-module load 2022
-module load Python/3.10.4-GCCcore-11.3.0
-
-pip install matplotlib --user
-pip install numpy --user
-```
+Need to build this out
