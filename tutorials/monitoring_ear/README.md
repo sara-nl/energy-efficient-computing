@@ -124,5 +124,5 @@ EAR is not only a tool that will throttle CPU Freqs, but it also allows you to c
 
 The image below illustrates the usage of EAR to show the characteristics of a variety of multi-node CPU based applications side by side. This information can be obtained via the `monitoring` policy in EAR, and visualized with the `eacct` tool.
 
-![Application_char](images/CPU_characterization_plot.png)
+![Application_char](../images/CPU_characterization_plot.png)
 
