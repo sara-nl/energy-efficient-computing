@@ -311,12 +311,7 @@ g++ -fopenmp -lpmt example_program.cpp -o example_program
 
 <h2 id="exercises">Exercises</h2>
 
-
-### 1. Monitor an Application with EAR.
-
-
-
-### 2. How does Performance, Power and Energy Scale?
+### 1. How does Performance, Power and Energy Scale?
 
 <div class="image-single-row">
           <img style="height:250px;width:30%" src="../images/size_v_time.png"></img>
@@ -324,6 +319,3 @@ g++ -fopenmp -lpmt example_program.cpp -o example_program
           <img style="height:250px;width:30%" src="../images/Black_question_mark.png"></img>
 </div>
 
-
-### Steps to take:
-Need to build this out
