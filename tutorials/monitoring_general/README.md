@@ -38,7 +38,7 @@ The power consumption of an integrated circuit (such as a processor) is proporti
 
 **P ~ f V²**
 
-![Power Frequency Relationship](images/P_v_freq_example.png)
+![Power Frequency Relationship](../images/P_v_freq_example.png)
 > Image Source: "CPU Power Consumption Experiments and Results Analysis of Intel i7-4820K" Matthew Travers m.travers@newcastle.ac.uk
 
 ### What is Frequency?
@@ -97,7 +97,7 @@ Nominal Perf ------>+-----------------------+                         +---------
 
 ### Goals of the course in a plot
 
-![GOALZ1](images/PETvFreq_MM_GROMACS_HEMEL_v2.png)
+![GOALZ1](../images/PETvFreq_MM_GROMACS_HEMEL_v2.png)
 
 
 <h2 id="linux">Linux tools</h2>
@@ -202,7 +202,7 @@ AMDuProfCLI timechart --list
 
 1. Profile specific core/s power and set the affinity of the program to the core..
 ```
-AMDuProfCLI timechart --event core=0-3,power -o AMDuProf_output --interval 10 --affinity 1 ../bin/mat_mul 200 200 
+AMDuProfCLI timechart --event core=0-3,power -o AMDuProf_output --interval 10 --affinity 1 ./bin/dgemm 500
 ```
 2. Profile the Frequency?
 3. Profile Temperature?
@@ -229,7 +229,7 @@ PMT is a high-level software library capable of collecting power consumption mea
 
 #### Capabilities:
 
-![PMT](images/PMT.png)
+![PMT](../images/PMT.png)
 > Image Source: 
 https://doi.org/10.48550/arXiv.2210.03724
 
@@ -304,7 +304,7 @@ How to compile a c++ source code with PMT library: All you need to do is load th
 module purge
 module load 2022
 module load foss/2022a
-module load pmt/1.1.0-GCCcore-11.3.0
+module load pmt/1.2.0-GCCcore-11.3.0
 
 g++ -fopenmp -lpmt example_program.cpp -o example_program
 ```
@@ -319,9 +319,9 @@ g++ -fopenmp -lpmt example_program.cpp -o example_program
 ### 2. How does Performance, Power and Energy Scale?
 
 <div class="image-single-row">
-          <img style="height:250px;width:30%" src="images/size_v_time.png"></img>
-          <img style="height:250px;width:30%" src="images/Black_question_mark.png"></img>
-          <img style="height:250px;width:30%" src="images/Black_question_mark.png"></img>
+          <img style="height:250px;width:30%" src="../images/size_v_time.png"></img>
+          <img style="height:250px;width:30%" src="../images/Black_question_mark.png"></img>
+          <img style="height:250px;width:30%" src="../images/Black_question_mark.png"></img>
 </div>
 
 
