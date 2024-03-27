@@ -5,14 +5,14 @@
 3. [Energy Optimization tutorial](policies/README.md)
 
 
-## Applications
+# Applications
 
 1. [Micro Applications](#micro-applications)
 2. [Scientific Applications](#scientific-applications)
    - [HemePure](#hemepure)
 
 
-### Micro Applications
+## Micro Applications
 There are two simple "micro" applications, matrix-vector addtion (axpy) and dense matrix multiplation (xgemm). These can be compiled for CPU's, and NVIDIA GPUs. They can be found in `energy-efficient-computing/tutorials/micro_applications`
 
 **Compile and run (CPU):**
@@ -57,9 +57,9 @@ make install
 ```
 
 
-### Scientific Applications
+## Scientific Applications
 All of the Scientific applications in this tutorial can be found in the project space `/projects/0/energy-course/`
-#### HemePure
+### HemePure
 https://github.com/UCL-CCS/HemePure  
 https://github.com/UCL-CCS/HemePure-GPU
 > HemePure/HemeLB developed by the team of Prof Peter Coveney at University College London (UCL), is a software pipeline that simulates blood flow. HemePure is specifically designed to efficiently handle sparse topologies, supports real-time visualization and remote steering of the simulation and can handle fully resolved realistic vessels like those found in the human brain.
