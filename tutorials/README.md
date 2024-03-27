@@ -50,3 +50,57 @@ salloc --ntasks=32 -t 02:00:00 -p thin --reservation=energy_efficiency_course_cp
 ```
 salloc --gpus-per-node=1 -t 01:00:00 -p gpu --reservation=energy_efficiency_course_gpu 
 ```
+
+
+## Applications
+
+1. [Micro Applications](monitoring/README.md)
+2. [Scientific Applications](dvfs/README.md)
+
+
+### Micro Applications
+There are two simple "micro" applications, matrix-vector addtion (axpy) and dense matrix multiplation (xgemm). These can be compiled for CPU's, and NVIDIA GPUs.
+
+**Compile and run (CPU):**
+Load the correct modules
+```
+module load 2023 
+module load foss/2023a
+module load CMake/3.26.3-GCCcore-12.3.0
+```
+Now build
+```
+mkdir build
+cd build
+cmake ..
+make install
+```
+This will install both single and double precision versions of the axpy and xgemms in the `bin` directory.
+
+In order to run the double prcision gemm (`dgemm`) you need to give it the matrix size...
+```
+./bin/dgemm 300
+```
+To use OpenMP parallel version:
+```
+./bin/dgemm -p 300
+```
+
+**Compile (GPU):**
+Load the correct modules
+```
+module load 2023 
+module load foss/2023a
+module load CUDA/12.1.1
+module load CMake/3.26.3-GCCcore-12.3.0
+```
+Now build
+```
+mkdir build
+cd build
+cmake -DENABLE_CUDA=1 ..
+make install
+```
+
+
+### Scientific Applications
