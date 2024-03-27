@@ -101,8 +101,7 @@ module load 2023
 module load foss/2023a
 module load CUDA/12.1.1
 
-srun --ntasks 3 /projects/0/energy-course/HemePure/hemepure_gpu -in /projects/\
-0/energy-course/HemePure/input_bifurcation.xml -out hemepure_outdir
+srun --ntasks 3 /projects/0/energy-course/HemePure/hemepure_gpu -in /projects/0/energy-course/HemePure/input_bifurcation.xml -out hemepure_outdir
 ```
 
 #### Palabos
