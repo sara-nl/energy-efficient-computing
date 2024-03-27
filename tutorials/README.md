@@ -59,7 +59,7 @@ salloc --gpus-per-node=1 -t 01:00:00 -p gpu --reservation=energy_efficiency_cour
 
 
 ### Micro Applications
-There are two simple "micro" applications, matrix-vector addtion (axpy) and dense matrix multiplation (xgemm). These can be compiled for CPU's, and NVIDIA GPUs.
+There are two simple "micro" applications, matrix-vector addtion (axpy) and dense matrix multiplation (xgemm). These can be compiled for CPU's, and NVIDIA GPUs. They can be found in `energy-efficient-computing/tutorials/micro_applications`
 
 **Compile and run (CPU):**
 Load the correct modules

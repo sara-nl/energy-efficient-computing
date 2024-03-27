@@ -14,7 +14,7 @@ project(
 
 
 # Find packages go here.
-add_subdirectory(src)
+add_subdirectory(micro_applications)
 include_directories(".")
 
 option(ENABLE_CUDA "Compile Cuda programs" OFF)
