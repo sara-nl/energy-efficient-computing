@@ -8,8 +8,7 @@
 - (13:00-14:00) Dynamic Voltage Frequency Scaling
 - (14:00-15:00) Energy Optimization
 
-
-# Practical information
+## Practical information
 - [How to connect to Snellius](#how-to-connect-to-snellius)
 - [How to interact with the course.](#how-to-interact-with-the-course)
 - [Reservations available for the course](#Reservations-available-for-the-course)
