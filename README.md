@@ -15,7 +15,7 @@
 - [Previous Course Material](#previous-course-material)
 
 
-## How to connect to Snellius
+### How to connect to Snellius
 
 >Snellius uses a white-list of ip-addresses and only from those locations you can access the system. 
 
@@ -34,7 +34,7 @@ ssh user@doornode.surfsara.nl
 The doornode is separate login server, that can be accessed from anywhere in the world: doornode.surfsara.nl (thus using `ssh user@doornode.surfsara.nl`). This server can be accessed with your usual login and password, after which you get a menu with systems that you can login to. Select 'Snellius' and type your password a second time. You are now logged on to Snellius. Please note that you cannot copy files or use X11 when using the door node.
 
 
-## How to interact with the course.
+### How to interact with the course.
 
 This course is a "command line" course. We assume that you are somewhat comfortable with using the command line. This comes with some caveats, mainly its not so "nice" to view images or GUIs. Though not essential to have nice "viewing" capabilities, for this course we will be looking at some nice plots `.pngs`. Here are some suggested remedies.
 
@@ -44,16 +44,16 @@ This course is a "command line" course. We assume that you are somewhat comforta
 3. Visual Studio Code we have documentation on how to set it up [here](https://servicedesk.surf.nl/wiki/display/WIKI/Visual+Studio+Code+for+remote+development) (go to the Running the VS Code Server on a login node section)
 
 
-## Reservations available for the course
+### Reservations available for the course
 
-### Day 1 (energy_efficiency_course_cpu)
+#### Day 1 (energy_efficiency_course_cpu)
 
 How to get there
 ```
 salloc --ntasks=32 -t 02:00:00 -p thin --reservation=energy_efficiency_course_cpu --constraint=hwperf
 ```
 
-### Day 2 (energy_efficiency_course_cpu and energy_efficiency_course_gpu)
+#### Day 2 (energy_efficiency_course_cpu and energy_efficiency_course_gpu)
 
 ```
 salloc --gpus-per-node=1 -t 01:00:00 -p gpu --reservation=energy_efficiency_course_gpu 
@@ -62,7 +62,7 @@ salloc --gpus-per-node=1 -t 01:00:00 -p gpu --reservation=energy_efficiency_cour
 
 
 
-## Previous Course Material
+### Previous Course Material
 > Past course materials can be found on seperate branches on this repository.
 
 - June 15-16 2023. [Material](https://github.com/sara-nl/energy-efficient-computing/tree/june_2023)
