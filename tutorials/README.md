@@ -54,8 +54,8 @@ salloc --gpus-per-node=1 -t 01:00:00 -p gpu --reservation=energy_efficiency_cour
 
 ## Applications
 
-1. [Micro Applications](monitoring/README.md)
-2. [Scientific Applications](dvfs/README.md)
+1. [Micro Applications](#micro-applications)
+2. [Scientific Applications](#scientific-applications)
 
 
 ### Micro Applications
