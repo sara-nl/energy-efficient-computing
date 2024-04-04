@@ -111,10 +111,28 @@ srun --ntasks 3 /projects/0/energy-course/HemePure/hemepure_gpu -in /projects/0/
 https://palabos.unige.ch/
 > The Palabos (Parallel Lattice Boltzmann Solver) library is a framework for general-purpose computational fluid dynamics (CFD), with a kernel based on the lattice Boltzmann method. The case we use in this course is a simulation of blood flow in a inside the 3D aneurysm geometry.
 
-Snellius (CPU) example jobscript:
+#### 1 node case:
+
 ```
 #!/bin/bash
-#SBATCH --ntasks=768
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=128
+#SBATCH --output=palabos_job.out
+#SBATCH --error=palabos_job.err
+#SBATCH --time=0:30:0
+#SBATCH -p rome --exclusive
+
+module load 2023
+module load foss/2023a
+
+srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabos/input_1_node.xml
+```
+
+#### 4 node case:
+
+```
+#!/bin/bash
+#SBATCH --nodes=4
 #SBATCH --ntasks-per-node=128
 #SBATCH --output=palabos_job.out
 #SBATCH --error=palabos_job.err
@@ -125,10 +143,11 @@ module load 2023
 module load foss/2023a
 
 srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabos/input_4_node.xml
-
 ```
 
 
 
-#### GROMACS
+### GROMACS
+
+
 #### PyTorch
