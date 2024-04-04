@@ -159,13 +159,14 @@ srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabo
 https://pytorch.org/hub/pytorch_vision_resnet/
 
 **torchvision should be installed in your environemnt first**
+
 Example how to install 2023
 ```
 module load 2023
 module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 pip install torchvision==0.16.2
 ```
-
+Example jobscript
 ```
 #!/bin/bash
 
