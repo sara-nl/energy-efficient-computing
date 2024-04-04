@@ -150,4 +150,24 @@ srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabo
 ### GROMACS
 
 
-#### PyTorch
+### PyTorch
+
+
+```
+#!/bin/bash
+
+#SBATCH -p gpu
+#SBATCH --gpus-per-node=1
+#SBATCH -t 00:20:00
+#SBATCH --cpus-per-task=4
+#SBATCH --output=pytorchjob.%j.out
+#SBATCH --error=pytorchjob.%j.err
+
+module load 2022
+module load Python/3.10.4-GCCcore-11.3.0
+module load SciPy-bundle/2022.05-foss-2022a
+module load CUDA/11.8.0
+
+# Resnet101 is a bit heavier
+python pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet101
+```
