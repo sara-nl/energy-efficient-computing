@@ -62,9 +62,6 @@ FULL example:
 #SBATCH --ear-policy=monitoring
 #SBATCH --ear-verbose=1
  
-module load 2022
-module load foss/2022a
- 
 srun myapplication
 ```
 
@@ -131,6 +128,8 @@ The image below illustrates the usage of EAR to show the characteristics of a va
 
 ### 1. Monitor an application with EAR
 
-### 2. Reduce energy usage of dgemm on a AMD genoa node.
+Pick one of your own applicaitons, or use one of these .... [applications](https://github.com/sara-nl/energy-efficient-computing/tree/main/tutorials#applications)
+
+### 2. Identify whether the applicaiton is CPU intensive or Memory/Communication intensive
 
 
