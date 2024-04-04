@@ -151,7 +151,16 @@ srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabo
 
 
 ### PyTorch
+> The ResNet model is based on the Deep Residual Learning for Image Recognition from this paper https://arxiv.org/abs/1512.03385 
+https://pytorch.org/hub/pytorch_vision_resnet/
 
+**torchvision should be installed in your environemnt first**
+Example how to install 2023
+```
+module load 2023
+module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
+pip install torchvision==0.16.2
+```
 
 ```
 #!/bin/bash
@@ -163,11 +172,9 @@ srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabo
 #SBATCH --output=pytorchjob.%j.out
 #SBATCH --error=pytorchjob.%j.err
 
-module load 2022
-module load Python/3.10.4-GCCcore-11.3.0
-module load SciPy-bundle/2022.05-foss-2022a
-module load CUDA/11.8.0
+module load 2023
+module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 
-# Resnet101 is a bit heavier
-python pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet101
+# Resnet101 
+python /projects/0/energy-course/PyTorch/pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet101
 ```
