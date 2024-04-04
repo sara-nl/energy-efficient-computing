@@ -82,6 +82,8 @@ Snellius (CPU) example jobscript:
 
 #SBATCH -p rome
 #SBATCH -t 00:30:00
+#SBATCH --output=hemepurejob.%j.out
+#SBATCH --error=hemepurejob.%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=128
 #SBATCH --exclusive
@@ -97,7 +99,9 @@ Snellius (GPU) example:
 #!/bin/bash                                                                    
 
 #SBATCH -p gpu                                                                 
-#SBATCH -t 00:30:00                                                            
+#SBATCH -t 00:30:00
+#SBATCH --output=hemepuregpujob.%j.out
+#SBATCH --error=hemepuregpujob.%j.err                                                            
 #SBATCH --gpus-per-node=1                                                      
 
 module load 2023
@@ -117,8 +121,8 @@ https://palabos.unige.ch/
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=128
-#SBATCH --output=palabos_job.out
-#SBATCH --error=palabos_job.err
+#SBATCH --output=palabosjob.%j.out
+#SBATCH --error=palabosjob.%j.err
 #SBATCH --time=0:30:0
 #SBATCH -p rome --exclusive
 
@@ -134,8 +138,8 @@ srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabo
 #!/bin/bash
 #SBATCH --nodes=4
 #SBATCH --ntasks-per-node=128
-#SBATCH --output=palabos_job.out
-#SBATCH --error=palabos_job.err
+#SBATCH --output=palabosjob.%j.out
+#SBATCH --error=palabosjob.%j.err
 #SBATCH --time=0:30:0
 #SBATCH -p rome --exclusive
 
