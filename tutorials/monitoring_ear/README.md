@@ -186,7 +186,7 @@ example jobscript
 > The ResNet model is based on the Deep Residual Learning for Image Recognition from this paper https://arxiv.org/abs/1512.03385 
 https://pytorch.org/hub/pytorch_vision_resnet/
 
-**torchvision should be installed in your environemnt first**
+**torchvision should be installed in your environment first**
 
 Example how to install 2023
 ```
