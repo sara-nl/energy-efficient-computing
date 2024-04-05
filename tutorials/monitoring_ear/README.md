@@ -127,12 +127,14 @@ The image below illustrates the usage of EAR to show the characteristics of a va
 ## Exercises
 
 ### 1. Monitor an application with EAR
-Choose from the list [below](#applications)
+Choose an application from the list [below](#applications)
 
 ### 2. Identify whether the applicaiton is CPU intensive or Memory/Communication intensive
 
 
 ## Applications
+
+All of the Applications used in this tutorial can be found in the project space `/projects/0/energy-course/`
 
 1. [Synthetic Applications](#synthetic-applications)
 2. [Scientific Applications](#scientific-applications)
@@ -143,6 +145,7 @@ Choose from the list [below](#applications)
 
 
 ## Synthetic Applications
+### NAS Parallel Benchmarks (NPB3.4-MZ MPI+OpenMP) - SP-MZ Benchmark
 > The NAS Parallel Benchmarks (NPB) are a small set of programs designed to help evaluate the performance of parallel supercomputers. The benchmarks are derived from computational fluid dynamics (CFD) applications
 
 https://www.nas.nasa.gov/software/npb.html
@@ -151,7 +154,7 @@ In this course we will use the "Multi-zone versions of NPB" (NPB-MZ). These are 
 
 
 ## Scientific Applications
-All of the Scientific applications in this tutorial can be found in the project space `/projects/0/energy-course/`
+
 ### HemePure
 https://github.com/UCL-CCS/HemePure  
 https://github.com/UCL-CCS/HemePure-GPU
@@ -238,8 +241,6 @@ module load foss/2023a
 
 srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabos/input_4_node.xml
 ```
-
-
 
 ### GROMACS
 
