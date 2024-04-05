@@ -157,55 +157,19 @@ Example jobscript
 
 
 ## Scientific Applications
-
 ### HemePure
-https://github.com/UCL-CCS/HemePure  
+> HemePure/HemeLB developed by the team of Prof Peter Coveney at University College London (UCL), is a software pipeline that simulates blood flow. HemePure is specifically designed to efficiently handle sparse topologies, supports real-time visualization and remote steering of the simulation and can handle fully resolved realistic vessels like those found in the human brain. https://github.com/UCL-CCS/HemePure        
 https://github.com/UCL-CCS/HemePure-GPU
-> HemePure/HemeLB developed by the team of Prof Peter Coveney at University College London (UCL), is a software pipeline that simulates blood flow. HemePure is specifically designed to efficiently handle sparse topologies, supports real-time visualization and remote steering of the simulation and can handle fully resolved realistic vessels like those found in the human brain.
 
 * The executables are located in the directory `/projects/0/energy-course/HemePure`. There you will find the `hemepure` and `hemepure_gpu` (CUDA enabled) exectubles.
 **How to run a case**
 We will be running through an example of pressure driven flow through a bifurcation available in the HemeLB download.
 
-Launch a simulation
-```
-mpirun -n N <hemelb executable address> -in <input file *.xml address> -out <output directory address>
-```
+CPU example jobscript
+[hemepure_cpu_job.sh](https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/hemepure_cpu_job.sh)
 
-Snellius (CPU) example jobscript:
-```
-#!/bin/bash
-
-#SBATCH -p rome
-#SBATCH -t 00:30:00
-#SBATCH --output=hemepurejob.%j.out
-#SBATCH --error=hemepurejob.%j.err
-#SBATCH --nodes=1
-#SBATCH --ntasks=128
-#SBATCH --exclusive
-
-module load 2023
-module load foss/2023a
-
-srun /projects/0/energy-course/HemePure/hemepure -in /projects/0/energy-course/HemePure/input_bifurcation.xml -out hemepure_outdir
-```
-Snellius (GPU) example:
-> In General it is best to use 1 MPI rank per gpu. For the 1 GPU case, 2 extra mpi ranks are needed for code on the host.
-```
-#!/bin/bash                                                                    
-
-#SBATCH -p gpu                                                                 
-#SBATCH -t 00:30:00
-#SBATCH --output=hemepuregpujob.%j.out
-#SBATCH --error=hemepuregpujob.%j.err                                                            
-#SBATCH --gpus-per-node=1                                                      
-
-module load 2023
-module load foss/2023a
-module load CUDA/12.1.1
-
-srun --ntasks 3 /projects/0/energy-course/HemePure/hemepure_gpu -in /projects/0/energy-course/HemePure/input_bifurcation.xml -out hemepure_outdir
-```
+GPU example jobscript
+[hemepure_gpu_job.sh](https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/hemepure_gpu_job.sh)
 
 ### Palabos
 https://palabos.unige.ch/
