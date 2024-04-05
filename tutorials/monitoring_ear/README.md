@@ -7,7 +7,7 @@
 # Section Outline
 
 1. [Introduction](#introduction)
-2. [EARL (the library)](#EARL-(the-library))
+2. [EARL](#earl)
 3. [Tools](#tools)
 4. [Excersizes](#excersizes)
 
@@ -22,7 +22,7 @@ EAR usage on Snellius can be decomposed into two "services."
 
 2. Tools: Which include Job accounting (via the command eacct) which queries energy information of a particular job or list of jobs from the the EAR database (EAR DB) on Snellius.
 
-![EAR_configuration](images/EAR_config.png)
+![EAR_configuration](../images/EAR_config.png)
 
 ### EARD: Node Manager
 The node daemon is the component in charge of providing any kind of services that requires privileged capabilities. Current version is conceived as an external process executed with root privileges.
@@ -33,8 +33,7 @@ Implements a periodic power monitoring service. This service allows EAR package 
 Offers a remote API used by EARplug, EARGM and EAR commands. This API accepts requests such as get the system status, change policy settings or notify new job/end job events.
 
 
-## EARL (the library)
-
+## EARL
 
 The EAR Library is automatically loaded with MPI applications when EAR is enabled. EAR supports the utilization of both mpirun/mpiexec and srun commands.
 To enable EAR in your job script when launching an MPI application you will need to include the following SBATCH options in your job script.
@@ -50,7 +49,7 @@ Running MPI applications with EARL is automatic for SLURM systems when using sru
 #SBATCH --ear-policy=monitoring
 ```
 
-FULL example:
+Example:
 ```bash
 #!/bin/bash
  
@@ -127,14 +126,12 @@ The image below illustrates the usage of EAR to show the characteristics of a va
 ## Exercises
 
 ### 1. Monitor an application with EAR
-
-
+Choose from the list [below](#applications)
 
 ### 2. Identify whether the applicaiton is CPU intensive or Memory/Communication intensive
 
 
-
-# Applications
+## Applications
 
 1. [Synthetic Applications](#synthetic-applications)
 2. [Scientific Applications](#scientific-applications)
