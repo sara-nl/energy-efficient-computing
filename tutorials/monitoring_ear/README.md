@@ -12,7 +12,7 @@
 4. [Excersizes](#excersizes)
 
 
-<h2 id="introduction">Introduction</h2>
+### Introduction
 
 The Energy Aware Runtime (EAR) package provides an energy management framework for super computers. This tutorial covers the "end-user" experience with EAR.
 
