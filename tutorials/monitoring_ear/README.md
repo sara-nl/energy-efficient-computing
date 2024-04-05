@@ -153,6 +153,8 @@ https://www.nas.nasa.gov/software/npb.html
 In this course we will use the "Multi-zone versions of NPB" (NPB-MZ). These are designed to exploit multiple levels of parallelism in applications and to test the effectiveness of multi-level and hybrid parallelization (MPI-OpenMP) paradigms and tools. Specifically we use the SP-MZ (even-size zones within a problem class, increased number of zones as problem class grows).
 
 
+
+
 ## Scientific Applications
 
 ### HemePure
@@ -208,6 +210,8 @@ srun --ntasks 3 /projects/0/energy-course/HemePure/hemepure_gpu -in /projects/0/
 https://palabos.unige.ch/
 > The Palabos (Parallel Lattice Boltzmann Solver) library is a framework for general-purpose computational fluid dynamics (CFD), with a kernel based on the lattice Boltzmann method. The case we use in this course is a simulation of blood flow in a inside the 3D aneurysm geometry.
 
+
+
 #### 1 node case:
 
 ```
@@ -258,20 +262,5 @@ module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 pip install torchvision==0.16.2
 ```
 Example jobscript
-```
-#!/bin/bash
-
-#SBATCH -p gpu
-#SBATCH --gpus-per-node=1
-#SBATCH -t 00:20:00
-#SBATCH --cpus-per-task=4
-#SBATCH --output=pytorchjob.%j.out
-#SBATCH --error=pytorchjob.%j.err
-
-module load 2023
-module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
-
-# Resnet101 
-python /projects/0/energy-course/PyTorch/pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet101
-```
+https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/PyTorch_job.sh
 
