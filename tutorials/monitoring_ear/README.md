@@ -1,18 +1,18 @@
-# Energy Aware Runtime (EAR) Tutorial
+# Energy Aware Runtime (EAR) Monitoring Tutorial
 
 >EAR documentation for use on Snellius here: https://servicedesk.surf.nl/wiki/pages/viewpage.action?pageId=62226671
 >
 >EAR full documentation can be found here https://gitlab.bsc.es/ear_team/ear/-/wikis/home
 
-## Section Outline
+# Section Outline
 
 1. [Introduction](#introduction)
-2. [EARL (the library)](#EARL)
+2. [EARL (the library)](#EARL-(the-library))
 3. [Tools](#tools)
 4. [Excersizes](#excersizes)
 
 
-### Introduction
+## Introduction
 
 The Energy Aware Runtime (EAR) package provides an energy management framework for super computers. This tutorial covers the "end-user" experience with EAR.
 
@@ -33,7 +33,7 @@ Implements a periodic power monitoring service. This service allows EAR package 
 Offers a remote API used by EARplug, EARGM and EAR commands. This API accepts requests such as get the system status, change policy settings or notify new job/end job events.
 
 
-<h2 id="EARL">EARL (the library)</h2>
+## EARL (the library)
 
 
 The EAR Library is automatically loaded with MPI applications when EAR is enabled. EAR supports the utilization of both mpirun/mpiexec and srun commands.
