@@ -150,6 +150,13 @@ All of the Applications used in this tutorial can be found in the project space 
 
 In this course we will use the "Multi-zone versions of NPB" (NPB-MZ). These are designed to exploit multiple levels of parallelism in applications and to test the effectiveness of multi-level and hybrid parallelization (MPI-OpenMP) paradigms and tools. Specifically we use the SP-MZ (even-size zones within a problem class, increased number of zones as problem class grows).
 
+##### Problem Sizes:
+
+| Class     | Mesh size (x)  | Mesh size (y)  | Mesh size (z)  |
+| ----------- | ----------- | ----------- | ----------- |
+| C | 240 | 320 | 28 |
+| D | 1632  | 1216 | 34 |
+
 Example jobscript
 [NPB_job.sh](https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/NPB_job.sh)
 
@@ -193,6 +200,7 @@ module load 2023
 module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 pip install torchvision==0.16.2
 ```
+
 Example jobscript
 [PyTorch_job.sh](https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/PyTorch_job.sh)
 
