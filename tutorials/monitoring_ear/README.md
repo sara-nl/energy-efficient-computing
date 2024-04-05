@@ -262,5 +262,5 @@ module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 pip install torchvision==0.16.2
 ```
 Example jobscript
-https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/PyTorch_job.sh
+[PyTorch_job.sh](https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/PyTorch_job.sh)
 
