@@ -172,44 +172,12 @@ GPU example jobscript
 [hemepure_gpu_job.sh](https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/hemepure_gpu_job.sh)
 
 ### Palabos
-https://palabos.unige.ch/
-> The Palabos (Parallel Lattice Boltzmann Solver) library is a framework for general-purpose computational fluid dynamics (CFD), with a kernel based on the lattice Boltzmann method. The case we use in this course is a simulation of blood flow in a inside the 3D aneurysm geometry.
 
+> The Palabos (Parallel Lattice Boltzmann Solver) library is a framework for general-purpose computational fluid dynamics (CFD), with a kernel based on the lattice Boltzmann method. The case we use in this course is a simulation of blood flow in a inside the 3D aneurysm geometry. https://palabos.unige.ch/
 
+example jobscript
+[palabos_job.sh](https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/palabos_job.sh)
 
-#### 1 node case:
-
-```
-#!/bin/bash
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=128
-#SBATCH --output=palabosjob.%j.out
-#SBATCH --error=palabosjob.%j.err
-#SBATCH --time=0:30:0
-#SBATCH -p rome --exclusive
-
-module load 2023
-module load foss/2023a
-
-srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabos/input_1_node.xml
-```
-
-#### 4 node case:
-
-```
-#!/bin/bash
-#SBATCH --nodes=4
-#SBATCH --ntasks-per-node=128
-#SBATCH --output=palabosjob.%j.out
-#SBATCH --error=palabosjob.%j.err
-#SBATCH --time=0:30:0
-#SBATCH -p rome --exclusive
-
-module load 2023
-module load foss/2023a
-
-srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabos/input_4_node.xml
-```
 
 ### GROMACS
 
