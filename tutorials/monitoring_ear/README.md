@@ -146,12 +146,13 @@ All of the Applications used in this tutorial can be found in the project space 
 
 ## Synthetic Applications
 ### NAS Parallel Benchmarks (NPB3.4-MZ MPI+OpenMP) - SP-MZ Benchmark
-> The NAS Parallel Benchmarks (NPB) are a small set of programs designed to help evaluate the performance of parallel supercomputers. The benchmarks are derived from computational fluid dynamics (CFD) applications
+> The NAS Parallel Benchmarks (NPB) are a small set of programs designed to help evaluate the performance of parallel supercomputers. The benchmarks are derived from computational fluid dynamics (CFD) applications https://www.nas.nasa.gov/software/npb.html
 
-https://www.nas.nasa.gov/software/npb.html
 
 In this course we will use the "Multi-zone versions of NPB" (NPB-MZ). These are designed to exploit multiple levels of parallelism in applications and to test the effectiveness of multi-level and hybrid parallelization (MPI-OpenMP) paradigms and tools. Specifically we use the SP-MZ (even-size zones within a problem class, increased number of zones as problem class grows).
 
+Example jobscript
+[NPB_job.sh](https://github.com/sara-nl/energy-efficient-computing/blob/main/tutorials/monitoring_ear/NPB_job.sh)
 
 
 
