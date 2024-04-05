@@ -9,7 +9,8 @@
 1. [Introduction](#introduction)
 2. [EARL](#earl)
 3. [Tools](#tools)
-4. [Excersizes](#excersizes)
+4. [Exercises](#Exercises)
+    - [Applications](#applications) 
 
 
 ## Introduction
