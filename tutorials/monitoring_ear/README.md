@@ -125,11 +125,10 @@ The image below illustrates the usage of EAR to show the characteristics of a va
 
 
 ## Exercises
-
-### 1. Monitor an application with EAR
 Choose an application from the list [below](#applications)
-
+### 1. Monitor an application with EAR
 ### 2. Identify whether the applicaiton is CPU intensive or Memory/Communication intensive
+### 3. Play with PyTorch Automatic Mixed Precision, and maybe model "size". What impacts on Energy does this have?
 
 
 ## Applications
