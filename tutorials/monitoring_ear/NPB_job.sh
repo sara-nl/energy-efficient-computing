@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --exclusive
 
-#SBATCH --output=NPB.out
-#SBATCH --error=NPB.err
+#SBATCH --output=NPB.%j.out
+#SBATCH --error=NPB.%j.err
 #SBATCH --job-name=NPB
 
 module load 2023

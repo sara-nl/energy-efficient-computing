@@ -5,9 +5,9 @@
 #SBATCH -t 00:15:00
 #SBATCH --exclusive
 
-#SBATCH --output=HemePure_CPU.out
-#SBATCH --error=HemePure_CPU.err
-#SBATCH --job-name=HemePure_CPU
+#SBATCH --output=HemePure_GPU.%j.out
+#SBATCH --error=HemePure_GPU.%j.err
+#SBATCH --job-name=HemePure_GPU
 
 module load 2023
 module load foss/2023a

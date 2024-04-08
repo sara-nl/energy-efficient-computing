@@ -6,8 +6,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --exclusive
 
-#SBATCH --output=PyTorch.out
-#SBATCH --error=PyTorch.err
+#SBATCH --output=PyTorch.%j.out
+#SBATCH --error=PyTorch.%j.err
 #SBATCH --job-name=PT
 
 module load 2023
