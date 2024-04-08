@@ -1,18 +1,22 @@
 #!/bin/bash
 
-#SBATCH -p thin
+#SBATCH -p rome
 #SBATCH -n 128
 #SBATCH -t 00:59:00
 #SBATCH --exclusive 
-#SBATCH --output=GROMACS_run_pair_ME.out
-#SBATCH --error=GROMACS_run_pair_ME.err
+#SBATCH --output=GROMACS_run.%j.out
+#SBATCH --error=GROMACS_run.%j.err
 
 #SBATCH --ear=on
-#SBATCH --ear-policy=min_energy
+#SBATCH --ear-policy=monitoring
 #SBATCH --ear-verbose=1
 
-module load 2022
-module load foss/2022a
-module load GROMACS/2021.6-foss-2022a
+module load 2023
+module load foss/2023a
+module load GROMACS/2023.3-foss-2023a
 
-srun --ntasks=128 --cpus-per-task=1 gmx_mpi mdrun -s hEGFRDimer_benchmark.tpr
+# 20K atom system  --> Crambin_benchmark.tpr
+# 1.4M atom system --> hEGFRDimer_benchmark.tpr
+# 3M atom system   --> hEGFRDimerSmallerPL_benchmark.tpr
+
+srun --ntasks=128 --cpus-per-task=1 gmx_mpi mdrun -s /projects/0/energy-course/GROMACS/hEGFRDimer_benchmark.tpr
