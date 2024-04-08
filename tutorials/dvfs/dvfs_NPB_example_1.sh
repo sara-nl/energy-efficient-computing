@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --exclusive
 
-#SBATCH --output=NPB_dfvs.out
-#SBATCH --error=NPB_dfvs.err
+#SBATCH --output=NPB_dfvs.%j.out
+#SBATCH --error=NPB_dfvs.%j.err
 #SBATCH --job-name=NPB_dvfs
 
 #SBATCH --ear=on
