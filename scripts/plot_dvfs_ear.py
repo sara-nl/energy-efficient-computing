@@ -37,7 +37,13 @@ for jid in jids:
         data = pd.concat([data, data_tmp], ignore_index=True)
 
 
-sns.lineplot(data = data, x = data['DEF'],y = data["ENERGY(J)"])
+fig, axs = plt.subplots(3, 1, sharex=True)
+
+sns.lineplot(data = data, x = data['DEF'],y = data["TIME(s)"], ax = axs[0])
+sns.lineplot(data = data, x = data['DEF'],y = data["POWER(W)"], ax = axs[1])
+sns.lineplot(data = data, x = data['DEF'],y = data["ENERGY(J)"], ax = axs[2])
+
+axs[2].set_xlabel("Defined Freq (GHz)")
 plt.savefig("csvs/test.png")
 data.to_csv("csvs/test_data.csv")
 
