@@ -54,7 +54,7 @@ Example:
 ```bash
 #!/bin/bash
  
-#SBATCH -p thin
+#SBATCH -p rome
 #SBATCH -t 00:30:00
 #SBATCH --ntasks=128
  
@@ -105,7 +105,7 @@ eacct -j 175966,175967,175968
 ```
 squeue
              JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-           2884239      thin ear_sbat benjamic  R       2:19      1 tcn352
+           2884239      rome ear_sbat benjamic  R       2:19      1 tcn352
 ```
 
 ```
