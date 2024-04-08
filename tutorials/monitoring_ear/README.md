@@ -23,7 +23,7 @@ EAR usage on Snellius can be decomposed into two "services."
 
 2. Tools: Which include Job accounting (via the command eacct) which queries energy information of a particular job or list of jobs from the the EAR database (EAR DB) on Snellius.
 
-![EAR_configuration](../images/EAR_config.png)
+![EAR_configuration](../../images/EAR_config.png)
 
 ### EARD: Node Manager
 The node daemon is the component in charge of providing any kind of services that requires privileged capabilities. Current version is conceived as an external process executed with root privileges.
@@ -121,7 +121,7 @@ EAR is not only a tool that will throttle CPU Freqs, but it also allows you to c
 
 The image below illustrates the usage of EAR to show the characteristics of a variety of multi-node CPU based applications side by side. This information can be obtained via the `monitoring` policy in EAR, and visualized with the `eacct` tool.
 
-![Application_char](../images/CPU_characterization_plot.png)
+![Application_char](../../images/CPU_characterization_plot.png)
 
 
 ## Exercises

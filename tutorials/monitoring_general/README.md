@@ -1,14 +1,14 @@
 # Energy and power monitoring hands on session:
 ## Section Outline
 
-1. [Basic Concepts](#concepts)
-2. [Linux tools](#linux)
-3. [Profilers](#profiler)
+1. [Basic Concepts](#basic-concepts)
+2. [Linux tools](#linux-tools)
+3. [Profilers](#profilers)
 4. [Libraries](#libraries)
 5. [Exercises](#exercises)
 
 
-<h2 id="concepts">Basic Concepts</h2>
+## Basic Concepts
 
 ### What is Power? What is Energy? And how do I control it?
 
@@ -38,7 +38,7 @@ The power consumption of an integrated circuit (such as a processor) is proporti
 
 **P ~ f V²**
 
-![Power Frequency Relationship](../images/P_v_freq_example.png)
+![Power Frequency Relationship](../../images/P_v_freq_example.png)
 > Image Source: "CPU Power Consumption Experiments and Results Analysis of Intel i7-4820K" Matthew Travers m.travers@newcastle.ac.uk
 
 ### What is Frequency?
@@ -95,12 +95,7 @@ Nominal Perf ------>+-----------------------+                         +---------
 
 ```
 
-### Goals of the course in a plot
-
-![GOALZ1](../images/PETvFreq_MM_GROMACS_HEMEL_v2.png)
-
-
-<h2 id="linux">Linux tools</h2>
+## Linux tools
 
 In order to get an overview of the CPU architecture of the physical (host) system use the linux tool `lscpu`. 
 ```
@@ -130,8 +125,7 @@ watch -n 0.1 cpupower -c 0 frequency-info
 ```
 
 
-
-<h2 id="profiler">Profilers</h2>
+## Profilers
 
 
 > <mark style="background: #FF0800!important">**!!!! **Attention** !!!!**</mark>
@@ -221,7 +215,7 @@ likwid-perfctr -g ENERGY -C 1 ../bin/dgemm 500
 Since LIKWID is a non "native" AMD tool it requires a special daemon to access the readable and writeable MSR device files, https://github.com/RRZE-HPC/likwid/wiki/likwid-accessD . Since Snellius is a public shared (Mostly AMD machine) we will stick to the AMD tooling.
 
 
-<h2 id="libraries">Libraries</h2>
+## Libraries
 
 ### 1. PMT ([Power Measurement Toolkit](https://git.astron.nl/RD/pmt/)) 
 
@@ -229,7 +223,7 @@ PMT is a high-level software library capable of collecting power consumption mea
 
 #### Capabilities:
 
-![PMT](../images/PMT.png)
+![PMT](../../images/PMT.png)
 > Image Source: 
 https://doi.org/10.48550/arXiv.2210.03724
 
@@ -309,13 +303,6 @@ module load pmt/1.2.0-GCCcore-11.3.0
 g++ -fopenmp -lpmt example_program.cpp -o example_program
 ```
 
-<h2 id="exercises">Exercises</h2>
 
-### 1. How does Performance, Power and Energy Scale?
 
-<div class="image-single-row">
-          <img style="height:250px;width:30%" src="../images/size_v_time.png"></img>
-          <img style="height:250px;width:30%" src="../images/Black_question_mark.png"></img>
-          <img style="height:250px;width:30%" src="../images/Black_question_mark.png"></img>
-</div>
 
