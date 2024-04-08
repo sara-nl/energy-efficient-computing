@@ -10,7 +10,7 @@ Dynamic frequency scaling (also known as CPU throttling) is a power management t
 Since Snellius is a shared public machine. It is not so easy to change CPU Freqs dynamically. So we will achieve this via the EAR daemon (which is running on all of the nodes)
 
 ```
-srun --ntasks=1 --ear-cpufreq=1500000 --ear-policy=monitoring --ear-verbose=1 ./executable
+srun --ear-cpufreq=1500000 --ear-policy=monitoring --ear-verbose=1 ./executable
 ```
 
 # Hands-on sessions
