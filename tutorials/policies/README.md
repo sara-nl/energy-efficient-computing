@@ -1,4 +1,4 @@
-# Energy Aware Runtime (EAR) Tutorial
+# EAR Energy Policy Tutorial
 
 >EAR documentation for use on Snellius here: https://servicedesk.surf.nl/wiki/pages/viewpage.action?pageId=62226671
 >
@@ -6,13 +6,12 @@
 
 ## Section Outline
 
-1. [Introduction](#introduction)
-2. [EARL (the library)](#EARL)
-3. [EAR Tools](#ear-tools)
+1. [Application Characterization](#application-characterization)
+3. [EAR Policies](#ear-policies)
 4. [Excersizes](#excersizes)
 
 
-<h2 id="introduction">Introduction</h2>
+## Application Characterization
 
 The Energy Aware Runtime (EAR) package provides an energy management framework for super computers. This tutorial covers the "end-user" experience with EAR.
 
@@ -22,51 +21,8 @@ EAR usage on Snellius can be decomposed into two "services."
 
 2. Tools: Which include Job accounting (via the command eacct) which queries energy information of a particular job or list of jobs from the the EAR database (EAR DB) on Snellius.
 
-![EAR_configuration](images/EAR_config.png)
-
-### EARD: Node Manager
-The node daemon is the component in charge of providing any kind of services that requires privileged capabilities. Current version is conceived as an external process executed with root privileges.
-The EARD provides the following services, each one covered by one thread:
-
-Provides privileged metrics to EARL such as the average frequency, uncore integrated memory controller counters to compute the memory bandwidth, as well as energy metrics (DC node, DRAM and package energy).
-Implements a periodic power monitoring service. This service allows EAR package to control the total energy consumed in the system.
-Offers a remote API used by EARplug, EARGM and EAR commands. This API accepts requests such as get the system status, change policy settings or notify new job/end job events.
 
 
-<h2 id="EARL">EARL (the library)</h2>
-
-
-The EAR Library is automatically loaded with MPI applications when EAR is enabled. EAR supports the utilization of both mpirun/mpiexec and srun commands.
-To enable EAR in your job script when launching an MPI application you will need to include the following SBATCH options in your job script.
-
-`srun` is the preferred job launcher when using EAR, as the EARL is a SLURM plugin! You will collect the largest amount of energy metrics when using srun
-Running MPI applications with EARL is automatic for SLURM systems when using srun. All the jobs are monitored by EAR and the Library is loaded by default when EAR is enabled in the job script. To run a job with srun and EARL there is no need to load the EAR module. When using slurm commands for job submission, both Intel and OpenMPI implementations are supported. When using sbatch/srun or salloc to submit a job, Intel MPI and OpenMPI are supported.
-
-
-### Example usage in a batch script
-
-```
-#SBATCH --ear=on
-#SBATCH --ear-policy=monitoring
-```
-
-FULL example:
-```bash
-#!/bin/bash
- 
-#SBATCH -p rome
-#SBATCH -t 00:30:00
-#SBATCH --ntasks=128
- 
-#SBATCH --ear=on
-#SBATCH --ear-policy=monitoring
-#SBATCH --ear-verbose=1
- 
-module load 2022
-module load foss/2022a
- 
-srun myapplication
-```
 
 ### Application Characterization
 
@@ -114,8 +70,15 @@ Since LBM is a memory intensive algorithm, we see that the `min_energy` policy o
 
 ![EAR_policies](../../images/Palabos_4node_128ppn_foss_per_policy_V2.png)
 
+### Example usage in a batch script
 
-<h2 id="exercises">Exercise</h2>
+```
+#SBATCH --ear=on
+#SBATCH --ear-policy=monitoring
+```
+
+
+## Exercise
 
 1. What is the best policy to save energy for the NPB SP-MZ (class D) Run?
   - How much energy do you save? 
