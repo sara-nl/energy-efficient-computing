@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -p rome
-#SBATCH -t 00:15:00
+#SBATCH -t 00:55:00
 #SBATCH --nodes=1
 #SBATCH --exclusive
 

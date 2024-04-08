@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -p rome
-#SBATCH -t 00:15:00
+#SBATCH -t 00:55:00
 #SBATCH --nodes=1
 #SBATCH --exclusive
 
@@ -25,11 +25,11 @@ module load foss/2023a
 # in a more readable way (1.5 GHz, to 2.6 GHz in increments of 0.1 GHz)
 
 #for frequency in {1300000..2400000..100000} #Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz
-for frequency in {1500000..2600000..100000} #AMD EPYC 7H12 64-Core Processor
+for frequency in {1500000..2600000..100000} #AMD (ROME) EPYC 7H12 64-Core Processor
 do
 
     echo "Launching NPB @ Freq=$frequency"
 
-    srun --ear-cpufreq=$frequency --ear-policy=monitoring --ear-verbose=1 --ntasks=128 /projects/0/energy-course/sp-mz.D.x
+    srun --ear-cpufreq=$frequency --ear-policy=monitoring --ear-verbose=1 --ntasks=128  /projects/0/energy-course/NPB3.4-MZ-MPI/sp-mz.D.x
 
 done
