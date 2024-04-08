@@ -157,11 +157,7 @@ FreqGain=(CurFreq-PrevFreq)/PrevFreq
 When launched with min_time policy, applications start at a default frequency (defined at ear.conf).
 
 
-
-
 ![EAR_freq](images/CPU_FREQ_palabos_weakscaling_4nodes.png)
-
-
 
 In this image we see a 2D contour map of the Energy saving vs Time savings, which shows the Energy benefit and its associated performance loss for a 4 node run of the Lattice Boltzmann Method (LBM) CFD code Palabos (https://palabos.unige.ch).
 Since LBM is a memory intensive algorithm, we see that the `min_energy` policy of EAR be most effective.
@@ -171,58 +167,9 @@ Since LBM is a memory intensive algorithm, we see that the `min_energy` policy o
 
 <h2 id="exercises">Exercise</h2>
 
-### GROMACS (https://www.gromacs.org) run of the The HECBioSim Benchmarks (https://www.hecbiosim.ac.uk/access-hpc/benchmarks)
-> **GROMACS** A free and open-source software suite for high-performance molecular dynamics and output analysis.
->
-> **HECBioSim benchmark suite** consists of a set of simple benchmarks for a number of popular Molecular Dynamics (MD) engines, each of which is set at a different atom count. The benchmark suite currently contains benchmarks for the AMBER, GROMACS, LAMMPS and NAMD molecular dynamics packages.
-
-In this example we will choose the "465K atom system - hEGFR Dimer of 1IVO and 1NQL" simulation (which can be found here https://github.com/victorusu/GROMACS_Benchmark_Suite/tree/1.0.0/HECBioSim/hEGFRDimer). This simulation contains a total number of atoms = 465,399 (Protein atoms = 21,749  Lipid atoms = 134,268  Water atoms = 309,087  Ions = 295). The run will take about 10 minutes to execute (using all 128 cores of an AMD ROME node). The image below shows the simulation that we will run.
-
-![GROMACS](images/GROMACS_sim.png)
-> Image Source: 
-https://www.hecbiosim.ac.uk/access-hpc/benchmarks
-
-You will need the following input file in order to run the benchmark. Download the GROMACS benchmark run, which simulates a 465K atom system.
-```
-curl -LJ https://github.com/victorusu/GROMACS_Benchmark_Suite/raw/1.0.0/HECBioSim/hEGFRDimer/benchmark.tpr -o hEGFRDimer_benchmark.tpr
-```
-
-See the `ear_sbatch_GROMACS.sh` jobscript to see how to submit the GROMACS benchmark, with EAR enabled.
-
-```bash
-#!/bin/bash
-
-#SBATCH -p thin
-#SBATCH -n 128
-#SBATCH -t 00:20:00
-#SBATCH --exclusive 
-#SBATCH --output=GROMACS_run.out
-#SBATCH --error=GROMACS_run.err
-
-#SBATCH --ear=on
-#SBATCH --ear-policy=monitoring
-
-module load 2022
-module load foss/2022a
-module load GROMACS/2021.6-foss-2022a
-
-srun --ntasks=128 --cpus-per-task=1 gmx_mpi mdrun -s benchmark.tpr 
-```
-
-1. What is the best policy to save energy for the GROMACS Run?
+1. What is the best policy to save energy for the NPB SP-MZ (class D) Run?
   - How much energy do you save? 
   - What is the performance degradation for using such a policy?
   - How does the size of the domain (simulation) change things? Does the "effectiveness" policy change?
-    - **20K atom system** 
-    ```
-    curl -LJ https://github.com/victorusu/GROMACS_Benchmark_Suite/raw/1.0.0/HECBioSim/Crambin/benchmark.tpr -o Crambin_benchmark.tpr
-    ```
-    - **1.4M atom system** 
-    ``` 
-    curl -LJ https://github.com/victorusu/GROMACS_Benchmark_Suite/raw/1.0.0/HECBioSim/hEGFRDimerPair/benchmark.tpr -o hEGFRDimerPair_benchmark.tpr
-    ``` 
-    - **3M atom system** 
-    ```
-    curl -LJ https://github.com/victorusu/GROMACS_Benchmark_Suite/raw/1.0.0/HECBioSim/hEGFRDimerSmallerPL/benchmark.tpr -o hEGFRDimerSmallerPL_benchmark.tpr
-    ```
+
 
