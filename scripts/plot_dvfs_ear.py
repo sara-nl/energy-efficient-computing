@@ -43,6 +43,10 @@ sns.lineplot(data = data, x = data['DEF'],y = data["TIME(s)"], ax = axs[0])
 sns.lineplot(data = data, x = data['DEF'],y = data["POWER(W)"], ax = axs[1])
 sns.lineplot(data = data, x = data['DEF'],y = data["ENERGY(J)"], ax = axs[2])
 
+#axs[0].scatter(data["DEF"], data["TIME(s)"],s=1,alpha=0.75)
+#axs[1].scatter(data["DEF"], data["POWER(W)"],s=1,alpha=0.75)
+#axs[2].scatter(data["DEF"], data["ENERGY(J)"],s=1,alpha=0.75)
+
 axs[2].set_xlabel("Defined Freq (GHz)")
 plt.savefig("csvs/test.png")
 data.to_csv("csvs/test_data.csv")
