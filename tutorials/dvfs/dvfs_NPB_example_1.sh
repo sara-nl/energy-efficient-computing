@@ -23,7 +23,7 @@ module load foss/2023a
 # 2600000 is the nominal freq
 # you can choose from Freq from 1500000 to 2600000 in increments of 100000
 # in a more readable way (1.5 GHz, to 2.6 GHz in increments of 0.1 GHz)
-frequency=2600000
+frequency=2000000
 
 echo "Launching NPB @ Freq=$frequency"
 
