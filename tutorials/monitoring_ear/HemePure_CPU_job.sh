@@ -13,4 +13,7 @@
 module load 2023
 module load foss/2023a
 
-srun /projects/0/energy-course/HemePure/hemepure -in /projects/0/energy-course/HemePure/input_bifurcation.xml -out hemepure_outdir
+OUTPUT_DIR=hemepure_cpu_outdir
+rm -rf $OUTPUT_DIR # HemePure needs a fresh dir to run.
+
+srun /projects/0/energy-course/HemePure/hemepure -in /projects/0/energy-course/HemePure/input_bifurcation.xml -out $OUTPUT_DIR
