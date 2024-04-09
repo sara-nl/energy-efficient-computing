@@ -13,10 +13,11 @@
 module load 2023
 module load foss/2023a
 
+PROJECT_DIR=/projects/0/energy-course
 
 # 1 node case
 INPUT_FILE=input_1_node.xml
 # 4 node case (!! You need to change #SBATCH --nodes=4 !!)
 #INPUT_FILE=input_4_node.xml
 
-srun /projects/0/energy-course/palabos/aneurysm /projects/0/energy-course/palabos/$INPUT_FILE
+srun $PROJECT_DIR/palabos/aneurysm $PROJECT_DIR/palabos/$INPUT_FILE

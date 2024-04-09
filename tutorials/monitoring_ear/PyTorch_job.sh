@@ -13,6 +13,8 @@
 module load 2023
 module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 
+PROJECT_DIR=/projects/0/energy-course
+
 # Options for Benchmark
 # --fp16-allreduce      use fp16 compression during allreduce (default: False)
 # --model MODEL         model to benchmark (default: resnet50)
@@ -32,4 +34,4 @@ module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 
 
 # Resnet50 
-srun python /projects/0/energy-course/PyTorch/pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet50
+srun python $PROJECT_DIR/PyTorch/pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet50
