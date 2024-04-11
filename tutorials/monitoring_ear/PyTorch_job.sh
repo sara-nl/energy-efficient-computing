@@ -35,3 +35,12 @@ PROJECT_DIR=/projects/0/energy-course
 
 # Resnet50 
 srun python $PROJECT_DIR/PyTorch/pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet50
+
+# Resnet50 with mixed precision
+srun python $PROJECT_DIR/PyTorch/pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet50 --use-amp
+
+# Resnet101 (larger model) 
+srun python $PROJECT_DIR/PyTorch/pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet101
+
+# Resnet101 (larger model) with mixed precision
+srun python $PROJECT_DIR/PyTorch/pytorch_syntethic_benchmark.py --batch-size=32 --model=resnet101 --use-amp
