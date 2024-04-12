@@ -315,7 +315,7 @@ Build:
 ```
 mkdir build
 cd build
-cmake -DENALBE_PMT=1 ..
+cmake -DENABLE_PMT=1 ..
 make install
 ```
 
@@ -329,5 +329,24 @@ Example dgemm usage:
 > OpenMP Parallel 
 ```
 ./bin/dgemm_pmt -p 200
+```
+> CUDA Enabled (with build instructions)
+```
+module load 2023
+module load foss/2023a
+module load CMake/3.26.3-GCCcore-12.3.0
+module load CUDA/12.1.1
+module load pmt/1.2.0-GCCcore-12.3.0-CUDA-12.1.1
+```
+Build (on a node with attached NVIDIA GPU's):
+```
+mkdir build
+cd build
+cmake -DENABLE_PMT=1 -DENABLE_CUDA=1 ..
+make install
+```
+Run:
+```
+./bin/dgemm_pmt_gpu 2000 
 ```
 
