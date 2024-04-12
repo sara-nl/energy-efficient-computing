@@ -13,8 +13,13 @@
 module load 2023
 module load foss/2023a
 
+# ENV variable needed to report "loops" to the EARDB
+# export EARL_REPORT_LOOPS=1
+
+# location of the binaries for the course
 PROJECT_DIR=/projects/0/energy-course
 
+# HemePure specific outdir
 OUTPUT_DIR=hemepure_cpu_outdir
 rm -rf $OUTPUT_DIR # HemePure needs a fresh dir to run.
 

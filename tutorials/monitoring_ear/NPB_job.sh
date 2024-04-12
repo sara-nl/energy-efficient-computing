@@ -9,6 +9,10 @@
 #SBATCH --error=NPB.%j.err
 #SBATCH --job-name=NPB
 
+#SBATCH --reservation=ear431rome
+#SBATCH --ear=on
+#SBATCH --ear-policy=monitoring
+
 module load 2023
 module load foss/2023a
 

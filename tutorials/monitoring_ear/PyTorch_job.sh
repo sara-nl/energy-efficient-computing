@@ -13,6 +13,10 @@
 module load 2023
 module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 
+# ENV variable needed to report "loops" to the EARDB
+# export EARL_REPORT_LOOPS=1
+
+# location of the binaries for the course
 PROJECT_DIR=/projects/0/energy-course
 
 # Options for Benchmark
