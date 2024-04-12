@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -p genoa
+#SBATCH -p rome
 #SBATCH -t 00:35:00
 #SBATCH --nodes=1
 #SBATCH --exclusive
@@ -24,6 +24,6 @@ PROJECT_DIR=/projects/0/energy-course
 # |   C   |       240      |       320      |       28       |
 # |   D   |      1632      |      1216      |       34       |
 
-srun --ear=on --ear-policy=monitoring --ntasks=192 /projects/0/energy-course/NPB3.4-MZ-MPI/sp-mz.D.x
-srun --ear=on --ear-policy=min_time --ntasks=192 /projects/0/energy-course/NPB3.4-MZ-MPI/sp-mz.D.x
-srun --ear=on --ear-policy=min_energy --ntasks=192 /projects/0/energy-course/NPB3.4-MZ-MPI/sp-mz.D.x
+srun --ear=on --ear-policy=monitoring --ntasks=128 /projects/0/energy-course/NPB3.4-MZ-MPI/sp-mz.D.x
+srun --ear=on --ear-policy=min_time --ntasks=128 /projects/0/energy-course/NPB3.4-MZ-MPI/sp-mz.D.x
+srun --ear=on --ear-policy=min_energy --ntasks=128 /projects/0/energy-course/NPB3.4-MZ-MPI/sp-mz.D.x
