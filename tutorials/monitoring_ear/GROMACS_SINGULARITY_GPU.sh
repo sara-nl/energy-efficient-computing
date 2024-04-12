@@ -14,6 +14,9 @@
 
 module load ear
 
+#Benchmarlk taken from NVIDIA's site 
+# https://catalog.ngc.nvidia.com/orgs/hpc/containers/gromacs
+
 ## Export EAR env to GROMACS image
 # BIND EAR paths
 export APPTAINER_BIND="$EAR_INSTALL_PATH:$EAR_INSTALL_PATH:ro,$EAR_TMP:$EAR_TMP:rw"
