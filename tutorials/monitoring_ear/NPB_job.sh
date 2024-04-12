@@ -9,13 +9,13 @@
 #SBATCH --error=NPB.%j.err
 #SBATCH --job-name=NPB
 
-#SBATCH --reservation=ear431rome
-#SBATCH --ear=on
-#SBATCH --ear-policy=monitoring
-
 module load 2023
 module load foss/2023a
 
+# ENV variable needed to report "loops" to the EARDB
+# export EARL_REPORT_LOOPS=1
+
+# location of the binaries for the course
 PROJECT_DIR=/projects/0/energy-course
 
 # Two Class sizes available 
