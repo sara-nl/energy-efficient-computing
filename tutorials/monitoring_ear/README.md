@@ -98,6 +98,10 @@ Show metrics (averaged per job.stepid) from 3 jobs
 eacct -j 175966,175967,175968
 ```
 
+#### Important Options
+ - `-l` shows the information for each node for each job instead of the global statistics for said job.
+ - `-r` shows the EAR loop signatures. Users, job ids, and step ids can be specified as if were showing job information.
+ - `-c` specifies the file where the output will be stored in CSV format. If the argument is "no_file" the output will be printed to STDOUT [default: off]
 
 
 ### Example:
