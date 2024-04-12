@@ -5,7 +5,7 @@
 2. [Linux tools](#linux-tools)
 3. [Profilers](#profilers)
 4. [Libraries](#libraries)
-5. [Exercises](#exercises)
+5. [Exercises](#exercise)
 
 
 ## Basic Concepts
@@ -303,7 +303,7 @@ module load pmt/1.2.0-GCCcore-11.3.0
 g++ -fopenmp -lpmt example_program.cpp -o example_program
 ```
 
-#### How to build the exmaple sources
+## Exercise
 Load the 2023 GCC based toolchain
 ```
 module load 2023
