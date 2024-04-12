@@ -11,10 +11,9 @@ project(
   VERSION 1.0
   LANGUAGES C CXX)
 
-
-
 # Find packages go here.
 add_subdirectory(src)
 include_directories(".")
 
 option(ENABLE_CUDA "Compile Cuda programs" OFF)
+option(ENABLE_PMT "Compile programs with PMT functionality" OFF)

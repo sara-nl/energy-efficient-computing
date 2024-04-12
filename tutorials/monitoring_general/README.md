@@ -303,6 +303,31 @@ module load pmt/1.2.0-GCCcore-11.3.0
 g++ -fopenmp -lpmt example_program.cpp -o example_program
 ```
 
+#### How to build the exmaple sources
+Load the 2023 GCC based toolchain
+```
+module load 2023
+module load foss/2023a
+module load CMake/3.26.3-GCCcore-12.3.0
+module load pmt/1.2.0-GCCcore-12.3.0
+```
+Build:
+```
+mkdir build
+cd build
+cmake -DENALBE_PMT=1 ..
+make install
+```
 
+The binaries will be installed in `energy-efficient-computing/tutorials/monitoring_general/bin`
 
+Example dgemm usage:
+> Serial 
+```
+./bin/dgemm_pmt 200
+```
+> OpenMP Parallel 
+```
+./bin/dgemm_pmt -p 200
+```
 
