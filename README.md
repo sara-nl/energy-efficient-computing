@@ -1,17 +1,15 @@
 # Energy efficient computing
 
 ## Schedule
-### April 18 2024 (start 10:00 end 15:00)
+### April 18 2024 (start 10:00 end 14:00)
 - (10:00-11:00) Introduction 
-- (11:00-12:00) Energy Monitoring
-- (12:00-13:00) Lunch
-- (13:00-14:00) Dynamic Voltage Frequency Scaling
-- (14:00-15:00) Energy Optimization
+- (11:00-12:45) Energy Monitoring and Optimization
+- (12:45) Lunch
+- (Lunch -> 14:00) LAB time
 
 ## Practical information
 - [How to connect to Snellius](#how-to-connect-to-snellius)
 - [How to interact with the course.](#how-to-interact-with-the-course)
-- [Reservations available for the course](#Reservations-available-for-the-course)
 - [Previous Course Material](#previous-course-material)
 
 
