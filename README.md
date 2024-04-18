@@ -17,6 +17,7 @@
 
 ### How to connect to Snellius
 
+#### SSH
 >Snellius uses a white-list of ip-addresses and only from those locations you can access the system. 
 
 If you are connecting with eduroam (from the SURF Amsterdam office) you should be able to go directly to snellius. This IP has been whitelisted. 
@@ -33,6 +34,10 @@ ssh user@doornode.surfsara.nl
 ```
 The doornode is separate login server, that can be accessed from anywhere in the world: doornode.surfsara.nl (thus using `ssh user@doornode.surfsara.nl`). This server can be accessed with your usual login and password, after which you get a menu with systems that you can login to. Select 'Snellius' and type your password a second time. You are now logged on to Snellius. Please note that you cannot copy files or use X11 when using the door node.
 
+#### OpenOnDemand
+
+https://ondemand.snellius.surf.nl/
+
 
 ### How to interact with the course.
 
@@ -42,24 +47,6 @@ This course is a "command line" course. We assume that you are somewhat comforta
    - To view a png while on snellius use `display file.png`
 2. [MobaXterm](https://mobaxterm.mobatek.net) (windows) 
 3. Visual Studio Code we have documentation on how to set it up [here](https://servicedesk.surf.nl/wiki/display/WIKI/Visual+Studio+Code+for+remote+development) (go to the Running the VS Code Server on a login node section)
-
-
-### Reservations available for the course
-
-#### Day 1 (energy_efficiency_course_cpu)
-
-How to get there
-```
-salloc --ntasks=32 -t 02:00:00 -p thin --reservation=energy_efficiency_course_cpu --constraint=hwperf
-```
-
-#### Day 2 (energy_efficiency_course_cpu and energy_efficiency_course_gpu)
-
-```
-salloc --gpus-per-node=1 -t 01:00:00 -p gpu --reservation=energy_efficiency_course_gpu 
-```
-
-
 
 
 ### Previous Course Material
