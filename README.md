@@ -4,6 +4,9 @@
 ### November 7th 2024 (start 10:00 end 14:00)
 - (10:00-11:00) Introduction 
 - (11:00-12:45) Energy Monitoring and Optimization
+  - Running CPU/GPU Kernals with EAR
+  - Job monitoring and accounting
+  - Job efficiency
 - (12:45) Lunch
 - (Lunch -> 14:00) LAB time
 
