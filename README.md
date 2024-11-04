@@ -1,7 +1,7 @@
 # Energy efficient computing
 
 ## Schedule
-### April 18 2024 (start 10:00 end 14:00)
+### November 7th 2024 (start 10:00 end 14:00)
 - (10:00-11:00) Introduction 
 - (11:00-12:45) Energy Monitoring and Optimization
 - (12:45) Lunch
@@ -50,6 +50,8 @@ This course is a "command line" course. We assume that you are somewhat comforta
 ### Previous Course Material
 > Past course materials can be found on seperate branches on this repository.
 
+
+- April 18 2024. [Material](https://github.com/sara-nl/energy-efficient-computing/tree/April_2024)
 - June 15-16 2023. [Material](https://github.com/sara-nl/energy-efficient-computing/tree/june_2023)
     - Topic Intro - Sagar Dolas (SURF)
     - System architecture - Prof. Ana Lucia Varbanescu (UTwente)
