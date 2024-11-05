@@ -3,11 +3,15 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 from subprocess import Popen, PIPE
 import argparse
+import numpy as np
+import os
 import pdb
 
 class Plotter():
     def __init__(self):
         self.data = {}
+
+        self.filename = "tmp.csv"
 
         # Color Palettes
         self.arch_palette ={"Rome": "tab:blue",
@@ -61,9 +65,6 @@ class Plotter():
         self.A100_HP_RPEAK = 312000 # FP16 Tensor core GFlops 
         self.A100_HBM2 = 1935 #GB/s
 
-
-        # H100s Needed
-
         # H100s
         self.HGENOA_name = "AMD EPYC 9334 32-Core Processor"
         self.HGENOA_ncores = 64
@@ -81,26 +82,162 @@ class Plotter():
         self.H100_HP_RPEAK = 1979000 # FP16 Tensor core GFlops 
         self.H100_HBM2 = 3300 #GB/s
 
-    def eacct(self,jobid,stepid = 0):
 
-        process = Popen(['eacct','-j',jobid+"."+str(stepid),'-l','-c',jobid+str(stepid)+'.csv'], stdout=PIPE, stderr=PIPE)
+    def get_partition(self, data):
+
+        data['Arch'] = "UNK"
+
+        data['node_type'] = data['NODENAME'].str.extract(r'([a-zA-Z]*)')
+        data['node_number'] = data['NODENAME'].str.extract(r'(\d+)').astype(int)
+
+        try:
+            data.loc[(data['node_type'] == "tcn") & (data['node_number'] <= 525) , "Arch"] = "Rome"
+        except ValueError:
+            pass
+        try:
+            data.loc[(data['node_type'] == "tcn") & (data['node_number'] > 525) , "Arch"] = "Genoa"
+        except ValueError:
+            pass
+        try:
+            data.loc[(data['node_type'] == "gcn") & (data['node_number'] <= 72) , "Arch"] = "A100"
+        except ValueError:
+            pass
+        try:
+            data.loc[(data['node_type'] == "gcn") & (data['node_number'] > 72) , "Arch"] = "H100"
+        except ValueError:
+            pass
+        try:
+            data.loc[(data['node_type'] == "hcn"), "Arch"] = "high_mem"
+        except ValueError:
+            pass
+        try:
+            data.loc[(data['node_type'] == "fcn") & (data['node_number'] <= 72), "Arch"] = "Fat_Rome"
+        except ValueError:
+            pass
+        try:
+            data.loc[(data['node_type'] == "fcn") & (data['node_number'] >= 73) & (data['node_number'] <= 120), "Arch"] = "Fat_Gome"
+        except ValueError:
+            pass
+
+        return(data)
+
+
+    def eacct_avg(self,jobid,stepid = 0):
+
+        self.filename = jobid+str(stepid)+'.csv'
+
+        try:
+            os.remove(self.filename)
+        except FileNotFoundError:
+            pass
+
+        process = Popen(['eacct','-j',jobid+"."+str(stepid),'-l','-c',self.filename], stdout=PIPE, stderr=PIPE)
 
         output, error = process.communicate()
         output = output.decode('ISO-8859-1').strip()
         error = error.decode('ISO-8859-1').strip()
+
+        if "No jobs found" in str(output):
+            print(output)
+            exit(1)
                 
-        tmp_data = pd.read_csv(jobid+str(stepid)+'.csv',delimiter=";")
+        tmp_data = pd.read_csv(self.filename,delimiter=";")
+
+        tmp_data = self.get_partition(tmp_data)
+
+        tmp_data['OI'] = tmp_data['CPU-GFLOPS']/tmp_data['MEM_GBS']
+
         self.data = tmp_data
 
 
+    def eacct_loop(self,jobid,stepid = 0):
 
-    def roofline(self,data,*args, **kwargs):
-        
-        hue = kwargs.get('hue', None)
-        style = kwargs.get('style', None)
-        sort_by = kwargs.get('sort_by', None)
-        title = kwargs.get('title', None)
+        self.filename = jobid+str(stepid)+'.csv'
 
+        try:
+            os.remove(self.filename)
+        except FileNotFoundError:
+            pass
+
+        process = Popen(['eacct','-j',jobid+"."+str(stepid),'-r','-c',self.filename], stdout=PIPE, stderr=PIPE)
+
+        output, error = process.communicate()
+        output = output.decode('ISO-8859-1').strip()
+        error = error.decode('ISO-8859-1').strip()
+        if "No loops retrieved" in str(output):
+            print(output)
+            exit(1)
+
+                
+        tmp_data = pd.read_csv(self.filename,delimiter=";")
+
+        tmp_data = self.get_partition(tmp_data)
+
+        tmp_data['time'] = (pd.to_datetime(tmp_data['DATE']) - pd.to_datetime(tmp_data['DATE']).min()).dt.seconds
+
+        self.data = tmp_data
+
+
+    def timeline(self):
+
+        data = self.data
+
+        fig, axs = plt.subplots(nrows=5, ncols=1,sharex=True)
+
+        arch = data['Arch'].unique()
+
+        if arch == "Rome":
+            DRAMBW = self.ROME_DRAMBW
+            POWER = 280*2
+
+        if arch == "Genoa":
+            DRAMBW = self.GENOA_DRAMBW
+            POWER = 360*2
+
+        if arch == "A100":
+            DRAMBW = self.XEON_DRAMBW
+            POWER = 250*2 + 400*4
+
+        if arch == "H100":
+            DRAMBW = self.HGENOA_DRAMBW
+            POWER = 210*2 + 700*4
+
+
+        sns.lineplot(data=data, x="time", y="CPI", hue="NODENAME", ax = axs[0])
+
+        axs[1].plot(np.linspace(-10,1e6,100),np.ones(100)*DRAMBW,label="DRAMBW "+ str(DRAMBW),ls='--',color='black')
+        sns.lineplot(data=data, x="time", y="MEM_GBS", hue="NODENAME", ax = axs[1],legend=False)
+
+        sns.lineplot(data=data, x="time", y="IO_MBS", hue="NODENAME", ax = axs[2],legend=False)
+        sns.lineplot(data=data, x="time", y="GFLOPS", hue="NODENAME", ax = axs[3],legend=False)
+        axs[4].plot(np.linspace(-10,1e6,100),np.ones(100)*POWER,label="POWER "+ str(POWER),ls='--',color='black')
+
+        sns.lineplot(data=data, x="time", y="DC_NODE_POWER_W", hue="NODENAME", ax = axs[4],legend=False)
+
+        axs[0].set_ylim(0,1.1)
+        axs[1].set_ylim(0,DRAMBW+50)
+        axs[0].legend(loc=2, prop={'size': 6}, bbox_to_anchor=[1, 1])
+        axs[1].legend(loc=2, prop={'size': 6}, bbox_to_anchor=[1, 1])
+
+        axs[0].set_ylabel("CPI")
+        axs[1].set_ylabel("DRAM BW\n(GB/s)")
+        axs[2].set_ylabel("IO (MB/s)")
+        axs[3].set_ylabel("Gflop/s")
+        axs[4].set_ylabel("Node Power (W)")
+
+        plt.xlim(0,data['time'].max()+5)
+
+        axs[4].set_xlabel("time (s)")
+
+        plt.tight_layout()
+        plt.savefig("timeline." + self.filename.replace(".csv",".png"))
+
+
+
+
+    def roofline(self):
+
+        data = self.data        
         for arch in data['Arch'].unique():
 
             plot_data = data[data['Arch'] == arch]
@@ -182,17 +319,17 @@ class Plotter():
 
 
             if "Method" in data.columns:
-                g =sns.scatterplot(x="OI", y="Gflops",
+                g =sns.scatterplot(x="OI", y="CPU-GFLOPS",
                             linewidth=0,
-                            hue='Application',
-                            style="PI",
+                            hue='JOBID',
+                            #style="PI",
                             data=plot_data, ax=ax)
             else:
                 #This needs to be fixed
-                g = sns.scatterplot(x="OI", y="Gflops",
+                g = sns.scatterplot(x="OI", y="CPU-GFLOPS",
                             linewidth=0,
-                            hue='Application',
-                            style="PI",
+                            hue='JOBID',
+                            #style="PI",
                             data=plot_data, ax=ax)
 
             plt.xscale("log")
@@ -205,21 +342,30 @@ class Plotter():
             ax.set_xlabel("Operational Intensity (FLOPS/byte)")
 
             plt.tight_layout()
-            plt.savefig("plots/earl/arch/roofline_" + arch + ".png",dpi=200)
+            plt.savefig("roofline." + self.filename.replace(".csv",".png"),dpi=200)
+
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--jobid",metavar="JobID/s", help="Plot Rooflines from eacct tool" ,type=str, nargs='+')
+
+    parser.add_argument("-r", "--roofline", metavar="JobID/s", help="Plot Rooflines from eacct tool" ,type=str, nargs='+')
+    parser.add_argument("-t", "--timeline", metavar="JobID/s", help="Plot Timeline from eacct tool (if loops are reported)" ,type=str, nargs='+')
+    
     args = parser.parse_args()
 
-
-    if args.jobid:
-
+    if args.roofline:
         plotter = Plotter()
+        for jobid in args.roofline:
+            plotter.eacct_avg(jobid)
+            plotter.roofline()
+    
+    if args.timeline:
+        plotter = Plotter()
+        for jobid in args.timeline:
+            plotter.eacct_loop(jobid)
+            plotter.timeline()
 
-        plotter.eacct(args.jobid[0])
 
-        plotter.roofline()
         
         
