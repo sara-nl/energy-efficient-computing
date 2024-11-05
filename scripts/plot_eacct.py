@@ -124,7 +124,7 @@ class Plotter():
 
     def eacct_avg(self,jobid,stepid = 0):
 
-        self.filename = jobid+str(stepid)+'.csv'
+        self.filename = jobid+"."+str(stepid)+'.csv'
 
         try:
             os.remove(self.filename)
@@ -152,7 +152,7 @@ class Plotter():
 
     def eacct_loop(self,jobid,stepid = 0):
 
-        self.filename = jobid+str(stepid)+'.csv'
+        self.filename = jobid+"."+str(stepid)+'.csv'
 
         try:
             os.remove(self.filename)
@@ -205,19 +205,23 @@ class Plotter():
 
         sns.lineplot(data=data, x="time", y="CPI", hue="NODENAME", ax = axs[0])
 
-        axs[1].plot(np.linspace(-10,1e6,100),np.ones(100)*DRAMBW,label="DRAMBW "+ str(DRAMBW),ls='--',color='black')
+        axs[1].plot(np.linspace(-10,1e6,100),np.ones(100)*DRAMBW,label="MAX DRAMBW "+ str(DRAMBW) + "GB/s",ls='--',color='black')
         sns.lineplot(data=data, x="time", y="MEM_GBS", hue="NODENAME", ax = axs[1],legend=False)
 
         sns.lineplot(data=data, x="time", y="IO_MBS", hue="NODENAME", ax = axs[2],legend=False)
         sns.lineplot(data=data, x="time", y="GFLOPS", hue="NODENAME", ax = axs[3],legend=False)
-        axs[4].plot(np.linspace(-10,1e6,100),np.ones(100)*POWER,label="POWER "+ str(POWER),ls='--',color='black')
+        axs[4].plot(np.linspace(-10,1e6,100),np.ones(100)*POWER,label="MAX POWER "+ str(POWER) +" (W)",ls='--',color='black')
 
         sns.lineplot(data=data, x="time", y="DC_NODE_POWER_W", hue="NODENAME", ax = axs[4],legend=False)
 
+        pdb.set_trace()
+
         axs[0].set_ylim(0,1.1)
         axs[1].set_ylim(0,DRAMBW+50)
+        axs[4].set_ylim(0,POWER+50)
         axs[0].legend(loc=2, prop={'size': 6}, bbox_to_anchor=[1, 1])
         axs[1].legend(loc=2, prop={'size': 6}, bbox_to_anchor=[1, 1])
+        axs[4].legend(loc=2, prop={'size': 6}, bbox_to_anchor=[1, 1])
 
         axs[0].set_ylabel("CPI")
         axs[1].set_ylabel("DRAM BW\n(GB/s)")
