@@ -214,8 +214,6 @@ class Plotter():
 
         sns.lineplot(data=data, x="time", y="DC_NODE_POWER_W", hue="NODENAME", ax = axs[4],legend=False)
 
-        pdb.set_trace()
-
         axs[0].set_ylim(0,1.1)
         axs[1].set_ylim(0,DRAMBW+50)
         axs[4].set_ylim(0,POWER+50)
