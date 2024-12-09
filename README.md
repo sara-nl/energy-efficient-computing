@@ -1,14 +1,12 @@
 # Energy efficient computing
 
 ## Schedule
-### November 7th 2024 (start 10:00 end 14:00)
-- (09:00-10:45) Introduction 
-- (11:00-12:45) Energy Monitoring and Optimization
+### December 10th 2024 (start 13:00 end 17:00)
+- Introduction 
+- Energy Monitoring and Optimization
   - Running CPU/GPU Kernals with EAR
   - Job monitoring and accounting
   - Job efficiency
-- (12:45) Lunch
-- (Lunch -> 14:00) LAB time
 
 ## Practical information
 - [How to connect to Snellius](#how-to-connect-to-snellius)
