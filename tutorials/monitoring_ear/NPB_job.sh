@@ -23,6 +23,6 @@ PROJECT_DIR=/projects/0/energy-course
 # |   C   |       240      |       320      |       28       |
 # |   D   |      1632      |      1216      |       34       |
 
-srun --ntasks=128 $PROJECT_DIR/NPB3.4-MZ-MPI/sp-mz.C.x
+srun --ntasks=128 $PROJECT_DIR/NPB3.4-MZ-MPI/foss/sp-mz.C.x
 
-srun --ntasks=128 $PROJECT_DIR/NPB3.4-MZ-MPI/sp-mz.D.x
+srun --ntasks=128 $PROJECT_DIR/NPB3.4-MZ-MPI/foss/sp-mz.D.x
