@@ -236,8 +236,8 @@ class Plotter():
         plt.savefig("timeline." + self.filename.replace(".csv",".png"))
 
 
-    def roofline(self,data,*args, **kwargs):
-        
+    def roofline(self,*args, **kwargs):
+        data = self.data
         hue = kwargs.get('hue', None)
         style = kwargs.get('style', None)
         sort_by = kwargs.get('sort_by', None)
@@ -324,17 +324,15 @@ class Plotter():
 
 
             if "Method" in data.columns:
-                g =sns.scatterplot(x="OI", y="Gflops",
+                g =sns.scatterplot(x="OI", y="CPU-GFLOPS",
                             linewidth=0,
-                            hue='Application',
-                            style="PI",
+                            hue='JOBID',
                             data=plot_data, ax=ax)
             else:
                 #This needs to be fixed
-                g = sns.scatterplot(x="OI", y="Gflops",
+                g = sns.scatterplot(x="OI", y="CPU-GFLOPS",
                             linewidth=0,
-                            hue='Application',
-                            style="PI",
+                            hue='JOBID',
                             data=plot_data, ax=ax)
 
             plt.xscale("log")
@@ -347,7 +345,7 @@ class Plotter():
             ax.set_xlabel("Operational Intensity (FLOPS/byte)")
 
             plt.tight_layout()
-            plt.savefig("plots/earl/arch/roofline_" + arch + ".png",dpi=200)
+            plt.savefig("roofline." + self.filename.replace(".csv",".png"),dpi=200)
 
 
 
@@ -399,9 +397,9 @@ class Plotter():
             HP_Rpeak = DP_Rpeak * 4.0
             # Work Calculated on a node basis
             #NO_SIMD_DP_W = np.linspace(1./(Ncores*10),1.0,1000)*NO_SIMD_DP_Rpeak # thousand is just some arbitraty factor to make the line
-            D_W = np.geomspace(1./(Ncores),1.0,100)*DP_Rpeak # thousand is just some arbitraty factor to make the line
-            S_W = np.geomspace(1./(Ncores),1.0,100)*SP_Rpeak
-            H_W = np.geomspace(1./(Ncores),1.0,100)*HP_Rpeak 
+            D_W = np.geomspace(1./(Ncores*10),1.0,100)*DP_Rpeak # thousand is just some arbitraty factor to make the line
+            S_W = np.geomspace(1./(Ncores*10),1.0,100)*SP_Rpeak
+            H_W = np.geomspace(1./(Ncores*10),1.0,100)*HP_Rpeak 
             # Operation Intensity (Flops/Byte)
             #NO_SIMD_DP_I = NO_SIMD_DP_W/DRAMBW
             D_I = D_W/DRAMBW
@@ -456,6 +454,7 @@ if __name__ == "__main__":
         plotter = Plotter()
         for jobid in args.roofline:
             plotter.eacct_avg(jobid)
+            plotter.roofline()
             plotter.roofline_terminal()
     
     if args.timeline:
