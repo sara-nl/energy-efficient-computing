@@ -10,7 +10,10 @@ import pdb
 
 class Plotter():
     def __init__(self):
-        self.data = {}
+        self.avgdata = {}
+        self.loopdata = {}
+
+        self.loops_status=False
 
         self.filename = "tmp.csv"
 
@@ -148,7 +151,7 @@ class Plotter():
 
         tmp_data['OI'] = tmp_data['CPU-GFLOPS']/tmp_data['MEM_GBS']
 
-        self.data = tmp_data
+        self.avgdata = tmp_data
 
 
     def eacct_loop(self,jobid,stepid = 0):
@@ -176,12 +179,13 @@ class Plotter():
 
         tmp_data['time'] = (pd.to_datetime(tmp_data['DATE']) - pd.to_datetime(tmp_data['DATE']).min()).dt.seconds
 
-        self.data = tmp_data
+        self.loopdata = tmp_data
+        self.loops_status = True
 
 
     def timeline(self):
 
-        data = self.data
+        data = self.loopdata
 
         fig, axs = plt.subplots(nrows=5, ncols=1,sharex=True)
 
@@ -237,7 +241,7 @@ class Plotter():
 
 
     def roofline(self,*args, **kwargs):
-        data = self.data
+        data = self.avgdata
         hue = kwargs.get('hue', None)
         style = kwargs.get('style', None)
         sort_by = kwargs.get('sort_by', None)
@@ -350,12 +354,15 @@ class Plotter():
 
 
 
-    def roofline_terminal(self):
+    def terminal(self):
 
-        data = self.data        
-        for arch in data['Arch'].unique():
+        avgdata = self.avgdata
+        loopdata = self.loopdata
 
-            plot_data = data[data['Arch'] == arch]
+        for arch in avgdata['Arch'].unique():
+
+            plot_data = avgdata[avgdata['Arch'] == arch]
+            plot_loop_data = loopdata[loopdata['Arch'] == arch]
 
             # This will be set below based on Arch
             DP_Rpeak = 1 
@@ -369,6 +376,7 @@ class Plotter():
                 NO_SIMD_DP_Rpeak = self.ROME_DP_NOSIMD_RPEAK
                 DRAMBW = self.ROME_DRAMBW
                 Ncores = self.ROME_ncores
+                POWER = 280*2
 
             if arch == "Genoa":
                 CPU_NAME = self.GENOA_name
@@ -376,12 +384,15 @@ class Plotter():
                 NO_SIMD_DP_Rpeak = self.GENOA_DP_NOSIMD_RPEAK
                 DRAMBW = self.GENOA_DRAMBW
                 Ncores = self.GENOA_ncores
+                POWER = 360*2
+
             if arch == "A100":
                 CPU_NAME = self.XEON_name
                 DP_Rpeak = self.XEON_DP_RPEAK
                 DRAMBW = self.XEON_DRAMBW
                 Ncores = self.XEON_ncores
                 NO_SIMD_DP_Rpeak = 0 #UNK
+                POWER = 250*2 + 400*4
 
             if arch == "H100":
                 CPU_NAME = self.HGENOA_name
@@ -389,6 +400,8 @@ class Plotter():
                 DRAMBW = self.HGENOA_DRAMBW
                 Ncores = self.HGENOA_ncores
                 NO_SIMD_DP_Rpeak = 0 #UNK
+                POWER = 210*2 + 700*4
+
 
             xmax = 10000 # this arbtrary
 
@@ -406,8 +419,11 @@ class Plotter():
             S_I = S_W/DRAMBW
             H_I = H_W/DRAMBW
 
-
             plx.clf()
+            plx.subplots(1, 2)
+            plx.subplot(1, 1)
+            plx.theme("pro")
+            plx.plotsize(70, 100)
             plx.xscale('log')
             plx.yscale('log')
 
@@ -427,17 +443,39 @@ class Plotter():
             plx.plot(plot_data["OI"].values,plot_data["CPU-GFLOPS"].values, color="red",marker='sd',label=plot_data["JOBID"].values[0])
 
             #plx.text(x = np.max(H_I)+ 600, y= np.max(NO_SIMD_DP_W) + np.max(NO_SIMD_DP_W) * Ytext_factor, text = "NO SIMD DP = "+ str(round(NO_SIMD_DP_Rpeak,2))+" GFLOPS", fontsize=8)
-            plx.text("DP Rpeak = "+ str(round(DP_Rpeak,2))+" GFLOPS", x = xmax - xmax*0.9, y = np.max(D_W))
-            plx.text("SP Rpeak = "+ str(round(SP_Rpeak,2))+" GFLOPS", x = xmax - xmax*0.9, y = np.max(S_W))
-            plx.text("HP Rpeak = "+ str(round(HP_Rpeak,2))+" GFLOPS", x = xmax - xmax*0.9, y = np.max(H_W))
+            plx.text("DP Rpeak = "+ str(round(DP_Rpeak,2)), x = xmax - xmax*0.99, y = np.max(D_W))
+            plx.text("SP Rpeak = "+ str(round(SP_Rpeak,2)), x = xmax - xmax*0.99, y = np.max(S_W))
+            plx.text("HP Rpeak = "+ str(round(HP_Rpeak,2)), x = xmax - xmax*0.99, y = np.max(H_W))
             plx.text("DRAM BW = "+ str(DRAMBW)+ " GB/s", x = np.min(H_I), y = np.mean(H_W) + np.mean(H_W)*0.2)
-
-
 
             plx.ylabel("Performance (GFLOPS)")
             plx.xlabel("Operational Intensity (FLOPS/byte)")
-            plx.theme("pro")
-            plx.plotsize(100, 100)
+
+            plx.subplot(1,2)
+            plx.theme('pro')
+
+            if self.loops_status:
+                plx.subplot(1,2).subplots(3, 1)
+
+                plx.subplot(1,2).subplot(1, 1)
+                plx.scatter(plot_loop_data["time"], plot_loop_data["CPI"],color='red',marker='dot')
+                plx.ylabel("CPI")
+                plx.ylim(0,1)
+
+                plx.subplot(1,2).subplot(2, 1)
+                plx.scatter(plot_loop_data["time"], plot_loop_data["MEM_GBS"],color='red',marker='dot')
+                plx.ylabel("MEM_GBS")
+                plx.ylim(0,DRAMBW+100)
+
+                plx.subplot(1,2).subplot(3, 1)
+                plx.scatter(plot_loop_data["time"], plot_loop_data["GFLOPS"],color='red',marker='dot')
+                plx.ylabel("GFLOPS")
+                #plx.ylim(0,DRAMBW+100)
+
+
+            else:
+                plx.text("EAR LOOPS NOT ACTIVATED.\nRe-run your job with `export EARL_REPORT_LOOPS=1`",x=-0.5,y=0)
+                plx.xlim(-1,1)
             plx.show()
 
 
@@ -445,23 +483,21 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-r", "--roofline", metavar="JobID/s", help="Plot Rooflines from eacct tool" ,type=str, nargs='+')
-    parser.add_argument("-t", "--timeline", metavar="JobID/s", help="Plot Timeline from eacct tool (if loops are reported)" ,type=str, nargs='+')
+    parser.add_argument("-j", "--jobid", metavar="JobID/s", help="Plot Roofline and Timeline from eacct tool" ,type=str, nargs='+')
     
     args = parser.parse_args()
 
-    if args.roofline:
-        plotter = Plotter()
-        for jobid in args.roofline:
-            plotter.eacct_avg(jobid)
-            plotter.roofline()
-            plotter.roofline_terminal()
-    
-    if args.timeline:
-        plotter = Plotter()
-        for jobid in args.timeline:
-            plotter.eacct_loop(jobid)
-            plotter.timeline()
+    plotter = Plotter()
+    for jobid in args.jobid:
+        plotter.eacct_avg(jobid)
+        plotter.roofline()
+        
+        # Need to add some try except here
+        plotter.eacct_loop(jobid)
+        plotter.timeline()
+
+        plotter.terminal()
+
 
 
         
