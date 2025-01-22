@@ -1,5 +1,6 @@
 import pandas as pd
 from matplotlib import pyplot as plt
+import plotext as plx
 import seaborn as sns
 from subprocess import Popen, PIPE
 import argparse
@@ -125,7 +126,7 @@ class Plotter():
     def eacct_avg(self,jobid,stepid = 0):
 
         self.filename = jobid+"."+str(stepid)+'.csv'
-
+        print(self.filename)
         try:
             os.remove(self.filename)
         except FileNotFoundError:
@@ -235,11 +236,13 @@ class Plotter():
         plt.savefig("timeline." + self.filename.replace(".csv",".png"))
 
 
+    def roofline(self,data,*args, **kwargs):
+        
+        hue = kwargs.get('hue', None)
+        style = kwargs.get('style', None)
+        sort_by = kwargs.get('sort_by', None)
+        title = kwargs.get('title', None)
 
-
-    def roofline(self):
-
-        data = self.data        
         for arch in data['Arch'].unique():
 
             plot_data = data[data['Arch'] == arch]
@@ -321,17 +324,17 @@ class Plotter():
 
 
             if "Method" in data.columns:
-                g =sns.scatterplot(x="OI", y="CPU-GFLOPS",
+                g =sns.scatterplot(x="OI", y="Gflops",
                             linewidth=0,
-                            hue='JOBID',
-                            #style="PI",
+                            hue='Application',
+                            style="PI",
                             data=plot_data, ax=ax)
             else:
                 #This needs to be fixed
-                g = sns.scatterplot(x="OI", y="CPU-GFLOPS",
+                g = sns.scatterplot(x="OI", y="Gflops",
                             linewidth=0,
-                            hue='JOBID',
-                            #style="PI",
+                            hue='Application',
+                            style="PI",
                             data=plot_data, ax=ax)
 
             plt.xscale("log")
@@ -344,7 +347,100 @@ class Plotter():
             ax.set_xlabel("Operational Intensity (FLOPS/byte)")
 
             plt.tight_layout()
-            plt.savefig("roofline." + self.filename.replace(".csv",".png"),dpi=200)
+            plt.savefig("plots/earl/arch/roofline_" + arch + ".png",dpi=200)
+
+
+
+
+    def roofline_terminal(self):
+
+        data = self.data        
+        for arch in data['Arch'].unique():
+
+            plot_data = data[data['Arch'] == arch]
+
+            # This will be set below based on Arch
+            DP_Rpeak = 1 
+            Ncores = 1
+            NO_ILP_Rpeak = 1
+            DRAMBW = 1
+            # Now Set them
+            if arch == "Rome":
+                CPU_NAME = self.ROME_name
+                DP_Rpeak = self.ROME_DP_RPEAK
+                NO_SIMD_DP_Rpeak = self.ROME_DP_NOSIMD_RPEAK
+                DRAMBW = self.ROME_DRAMBW
+                Ncores = self.ROME_ncores
+
+            if arch == "Genoa":
+                CPU_NAME = self.GENOA_name
+                DP_Rpeak = self.GENOA_DP_RPEAK
+                NO_SIMD_DP_Rpeak = self.GENOA_DP_NOSIMD_RPEAK
+                DRAMBW = self.GENOA_DRAMBW
+                Ncores = self.GENOA_ncores
+            if arch == "A100":
+                CPU_NAME = self.XEON_name
+                DP_Rpeak = self.XEON_DP_RPEAK
+                DRAMBW = self.XEON_DRAMBW
+                Ncores = self.XEON_ncores
+                NO_SIMD_DP_Rpeak = 0 #UNK
+
+            if arch == "H100":
+                CPU_NAME = self.HGENOA_name
+                DP_Rpeak = self.HGENOA_DP_RPEAK
+                DRAMBW = self.HGENOA_DRAMBW
+                Ncores = self.HGENOA_ncores
+                NO_SIMD_DP_Rpeak = 0 #UNK
+
+            xmax = 10000 # this arbtrary
+
+            # get other Precisions
+            SP_Rpeak = DP_Rpeak * 2.0
+            HP_Rpeak = DP_Rpeak * 4.0
+            # Work Calculated on a node basis
+            #NO_SIMD_DP_W = np.linspace(1./(Ncores*10),1.0,1000)*NO_SIMD_DP_Rpeak # thousand is just some arbitraty factor to make the line
+            D_W = np.geomspace(1./(Ncores),1.0,100)*DP_Rpeak # thousand is just some arbitraty factor to make the line
+            S_W = np.geomspace(1./(Ncores),1.0,100)*SP_Rpeak
+            H_W = np.geomspace(1./(Ncores),1.0,100)*HP_Rpeak 
+            # Operation Intensity (Flops/Byte)
+            #NO_SIMD_DP_I = NO_SIMD_DP_W/DRAMBW
+            D_I = D_W/DRAMBW
+            S_I = S_W/DRAMBW
+            H_I = H_W/DRAMBW
+
+
+            plx.clf()
+            plx.xscale('log')
+            plx.yscale('log')
+
+            # Main Memory Line
+            plx.scatter(H_I,H_W,color='white', marker="dot")
+
+            # CPU Bound Lines
+            #plx.plot(np.logspace(np.max(NO_SIMD_DP_I),5e10,len(NO_SIMD_DP_I)),NO_SIMD_DP_Rpeak*np.ones(len(NO_SIMD_DP_I)), c='white', ls = "--")
+            plx.scatter(np.geomspace(np.max(D_I),xmax,len(D_I)),DP_Rpeak*np.ones(len(D_W)), color='white', marker="dot")
+            plx.scatter(np.geomspace(np.max(S_I),xmax,len(S_I)),SP_Rpeak*np.ones(len(S_W)), color='white', marker="dot")
+            plx.scatter(np.geomspace(np.max(H_I),xmax,len(H_I)),HP_Rpeak*np.ones(len(H_W)), color='white', marker="dot")
+            
+            Ytext_factor = 0.05
+
+            plx.title(CPU_NAME + "  - DRAM BW = "+ str(DRAMBW)+ " GB/s")
+
+            plx.plot(plot_data["OI"].values,plot_data["CPU-GFLOPS"].values, color="red",marker='sd',label=plot_data["JOBID"].values[0])
+
+            #plx.text(x = np.max(H_I)+ 600, y= np.max(NO_SIMD_DP_W) + np.max(NO_SIMD_DP_W) * Ytext_factor, text = "NO SIMD DP = "+ str(round(NO_SIMD_DP_Rpeak,2))+" GFLOPS", fontsize=8)
+            plx.text("DP Rpeak = "+ str(round(DP_Rpeak,2))+" GFLOPS", x = xmax - xmax*0.9, y = np.max(D_W))
+            plx.text("SP Rpeak = "+ str(round(SP_Rpeak,2))+" GFLOPS", x = xmax - xmax*0.9, y = np.max(S_W))
+            plx.text("HP Rpeak = "+ str(round(HP_Rpeak,2))+" GFLOPS", x = xmax - xmax*0.9, y = np.max(H_W))
+            plx.text("DRAM BW = "+ str(DRAMBW)+ " GB/s", x = np.min(H_I), y = np.mean(H_W) + np.mean(H_W)*0.2)
+
+
+
+            plx.ylabel("Performance (GFLOPS)")
+            plx.xlabel("Operational Intensity (FLOPS/byte)")
+            plx.theme("pro")
+            plx.plotsize(100, 100)
+            plx.show()
 
 
 if __name__ == "__main__":
@@ -360,7 +456,7 @@ if __name__ == "__main__":
         plotter = Plotter()
         for jobid in args.roofline:
             plotter.eacct_avg(jobid)
-            plotter.roofline()
+            plotter.roofline_terminal()
     
     if args.timeline:
         plotter = Plotter()
