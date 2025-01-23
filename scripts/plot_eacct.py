@@ -129,7 +129,6 @@ class Plotter():
     def eacct_avg(self,jobid,stepid = 0):
 
         self.filename = jobid+"."+str(stepid)+'.csv'
-        print(self.filename)
         try:
             os.remove(self.filename)
         except FileNotFoundError:
@@ -168,19 +167,21 @@ class Plotter():
         output, error = process.communicate()
         output = output.decode('ISO-8859-1').strip()
         error = error.decode('ISO-8859-1').strip()
-        if "No loops retrieved" in str(output):
-            print(output)
-            exit(1)
+
 
                 
-        tmp_data = pd.read_csv(self.filename,delimiter=";")
+        try:
+            tmp_data = pd.read_csv(self.filename,delimiter=";")
+            tmp_data = self.get_partition(tmp_data)
+            tmp_data['time'] = (pd.to_datetime(tmp_data['DATE']) - pd.to_datetime(tmp_data['DATE']).min()).dt.seconds
+            self.loopdata = tmp_data
+            self.loops_status = True
+        except:
+            if "No loops retrieved" in str(output):
+                print(output)
+            print("Loops not collected my EAR")
+            self.loops_status = False
 
-        tmp_data = self.get_partition(tmp_data)
-
-        tmp_data['time'] = (pd.to_datetime(tmp_data['DATE']) - pd.to_datetime(tmp_data['DATE']).min()).dt.seconds
-
-        self.loopdata = tmp_data
-        self.loops_status = True
 
 
     def timeline(self):
@@ -342,7 +343,6 @@ class Plotter():
             plt.xscale("log")
             plt.yscale("log")
             g.legend(loc='upper right', bbox_to_anchor=(1.30, 1.01))
-            #plt.legend()
             ax.set_xlim(0.1,1e4)
             ax.set_ylim(10,1e5)
             ax.set_ylabel("Performance (GFLOPS)")
@@ -355,128 +355,124 @@ class Plotter():
 
 
     def terminal(self):
+        # This will be set below based on Arch
+        DP_Rpeak = 1 
+        Ncores = 1
+        NO_ILP_Rpeak = 1
+        DRAMBW = 1
 
-        avgdata = self.avgdata
-        loopdata = self.loopdata
+        # Find out the Arch
+        arch = self.avgdata['Arch'].unique()[0]
 
-        for arch in avgdata['Arch'].unique():
+        # Now Set them
+        if arch == "Rome":
+            CPU_NAME = self.ROME_name
+            DP_Rpeak = self.ROME_DP_RPEAK
+            NO_SIMD_DP_Rpeak = self.ROME_DP_NOSIMD_RPEAK
+            DRAMBW = self.ROME_DRAMBW
+            Ncores = self.ROME_ncores
+            POWER = 280*2
 
-            plot_data = avgdata[avgdata['Arch'] == arch]
-            plot_loop_data = loopdata[loopdata['Arch'] == arch]
+        if arch == "Genoa":
+            CPU_NAME = self.GENOA_name
+            DP_Rpeak = self.GENOA_DP_RPEAK
+            NO_SIMD_DP_Rpeak = self.GENOA_DP_NOSIMD_RPEAK
+            DRAMBW = self.GENOA_DRAMBW
+            Ncores = self.GENOA_ncores
+            POWER = 360*2
 
-            # This will be set below based on Arch
-            DP_Rpeak = 1 
-            Ncores = 1
-            NO_ILP_Rpeak = 1
-            DRAMBW = 1
-            # Now Set them
-            if arch == "Rome":
-                CPU_NAME = self.ROME_name
-                DP_Rpeak = self.ROME_DP_RPEAK
-                NO_SIMD_DP_Rpeak = self.ROME_DP_NOSIMD_RPEAK
-                DRAMBW = self.ROME_DRAMBW
-                Ncores = self.ROME_ncores
-                POWER = 280*2
+        if arch == "A100":
+            CPU_NAME = self.XEON_name
+            DP_Rpeak = self.XEON_DP_RPEAK
+            DRAMBW = self.XEON_DRAMBW
+            Ncores = self.XEON_ncores
+            NO_SIMD_DP_Rpeak = 0 #UNK
+            POWER = 250*2 + 400*4
 
-            if arch == "Genoa":
-                CPU_NAME = self.GENOA_name
-                DP_Rpeak = self.GENOA_DP_RPEAK
-                NO_SIMD_DP_Rpeak = self.GENOA_DP_NOSIMD_RPEAK
-                DRAMBW = self.GENOA_DRAMBW
-                Ncores = self.GENOA_ncores
-                POWER = 360*2
-
-            if arch == "A100":
-                CPU_NAME = self.XEON_name
-                DP_Rpeak = self.XEON_DP_RPEAK
-                DRAMBW = self.XEON_DRAMBW
-                Ncores = self.XEON_ncores
-                NO_SIMD_DP_Rpeak = 0 #UNK
-                POWER = 250*2 + 400*4
-
-            if arch == "H100":
-                CPU_NAME = self.HGENOA_name
-                DP_Rpeak = self.HGENOA_DP_RPEAK
-                DRAMBW = self.HGENOA_DRAMBW
-                Ncores = self.HGENOA_ncores
-                NO_SIMD_DP_Rpeak = 0 #UNK
-                POWER = 210*2 + 700*4
+        if arch == "H100":
+            CPU_NAME = self.HGENOA_name
+            DP_Rpeak = self.HGENOA_DP_RPEAK
+            DRAMBW = self.HGENOA_DRAMBW
+            Ncores = self.HGENOA_ncores
+            NO_SIMD_DP_Rpeak = 0 #UNK
+            POWER = 210*2 + 700*4
 
 
-            xmax = 10000 # this arbtrary
+        xmax = 10000 # this arbtrary
 
-            # get other Precisions
-            SP_Rpeak = DP_Rpeak * 2.0
-            HP_Rpeak = DP_Rpeak * 4.0
-            # Work Calculated on a node basis
-            #NO_SIMD_DP_W = np.linspace(1./(Ncores*10),1.0,1000)*NO_SIMD_DP_Rpeak # thousand is just some arbitraty factor to make the line
-            D_W = np.geomspace(1./(Ncores*10),1.0,100)*DP_Rpeak # thousand is just some arbitraty factor to make the line
-            S_W = np.geomspace(1./(Ncores*10),1.0,100)*SP_Rpeak
-            H_W = np.geomspace(1./(Ncores*10),1.0,100)*HP_Rpeak 
-            # Operation Intensity (Flops/Byte)
-            #NO_SIMD_DP_I = NO_SIMD_DP_W/DRAMBW
-            D_I = D_W/DRAMBW
-            S_I = S_W/DRAMBW
-            H_I = H_W/DRAMBW
+        # get other Precisions
+        SP_Rpeak = DP_Rpeak * 2.0
+        HP_Rpeak = DP_Rpeak * 4.0
+        # Work Calculated on a node basis
+        #NO_SIMD_DP_W = np.linspace(1./(Ncores*10),1.0,1000)*NO_SIMD_DP_Rpeak # thousand is just some arbitraty factor to make the line
+        D_W = np.geomspace(1./(Ncores*10),1.0,100)*DP_Rpeak # this is calculated for the full node
+        S_W = np.geomspace(1./(Ncores*10),1.0,100)*SP_Rpeak # this is calculated for the full node
+        H_W = np.geomspace(1./(Ncores*10),1.0,100)*HP_Rpeak # this is calculated for the full node
+        # Operation Intensity (Flops/Byte)
+        #NO_SIMD_DP_I = NO_SIMD_DP_W/DRAMBW
+        D_I = D_W/DRAMBW
+        S_I = S_W/DRAMBW
+        H_I = H_W/DRAMBW
 
-            plx.clf()
-            plx.subplots(1, 2)
-            plx.subplot(1, 1)
-            plx.theme("pro")
-            plx.plotsize(70, 100)
-            plx.xscale('log')
-            plx.yscale('log')
+        plx.clf()
+        plx.subplots(1, 2)
+        plx.subplot(1, 1)
+        plx.theme("pro")
+        plx.plotsize(70, 100)
+        plx.xscale('log')
+        plx.yscale('log')
 
-            # Main Memory Line
-            plx.scatter(H_I,H_W,color='white', marker="dot")
+        # Main Memory Line
+        plx.scatter(H_I,H_W,color='white', marker="dot")
 
-            # CPU Bound Lines
-            #plx.plot(np.logspace(np.max(NO_SIMD_DP_I),5e10,len(NO_SIMD_DP_I)),NO_SIMD_DP_Rpeak*np.ones(len(NO_SIMD_DP_I)), c='white', ls = "--")
-            plx.scatter(np.geomspace(np.max(D_I),xmax,len(D_I)),DP_Rpeak*np.ones(len(D_W)), color='white', marker="dot")
-            plx.scatter(np.geomspace(np.max(S_I),xmax,len(S_I)),SP_Rpeak*np.ones(len(S_W)), color='white', marker="dot")
-            plx.scatter(np.geomspace(np.max(H_I),xmax,len(H_I)),HP_Rpeak*np.ones(len(H_W)), color='white', marker="dot")
-            
-            Ytext_factor = 0.05
+        # CPU Bound Lines
+        #plx.plot(np.logspace(np.max(NO_SIMD_DP_I),5e10,len(NO_SIMD_DP_I)),NO_SIMD_DP_Rpeak*np.ones(len(NO_SIMD_DP_I)), c='white', ls = "--")
+        plx.scatter(np.geomspace(np.max(D_I),xmax,len(D_I)),DP_Rpeak*np.ones(len(D_W)), color='white', marker="dot")
+        plx.scatter(np.geomspace(np.max(S_I),xmax,len(S_I)),SP_Rpeak*np.ones(len(S_W)), color='white', marker="dot")
+        plx.scatter(np.geomspace(np.max(H_I),xmax,len(H_I)),HP_Rpeak*np.ones(len(H_W)), color='white', marker="dot")
 
-            plx.title(CPU_NAME + "  - DRAM BW = "+ str(DRAMBW)+ " GB/s")
+        plx.title(CPU_NAME + "  - DRAM BW = "+ str(DRAMBW)+ " GB/s")
 
-            plx.plot(plot_data["OI"].values,plot_data["CPU-GFLOPS"].values, color="red",marker='sd',label=plot_data["JOBID"].values[0])
+        plot_data = self.avgdata[self.avgdata['Arch'] == arch]
 
-            #plx.text(x = np.max(H_I)+ 600, y= np.max(NO_SIMD_DP_W) + np.max(NO_SIMD_DP_W) * Ytext_factor, text = "NO SIMD DP = "+ str(round(NO_SIMD_DP_Rpeak,2))+" GFLOPS", fontsize=8)
-            plx.text("DP Rpeak = "+ str(round(DP_Rpeak,2)), x = xmax - xmax*0.99, y = np.max(D_W))
-            plx.text("SP Rpeak = "+ str(round(SP_Rpeak,2)), x = xmax - xmax*0.99, y = np.max(S_W))
-            plx.text("HP Rpeak = "+ str(round(HP_Rpeak,2)), x = xmax - xmax*0.99, y = np.max(H_W))
-            plx.text("DRAM BW = "+ str(DRAMBW)+ " GB/s", x = np.min(H_I), y = np.mean(H_W) + np.mean(H_W)*0.2)
+        plx.plot(plot_data["OI"].values,plot_data["CPU-GFLOPS"].values, color="red",marker='sd',label=plot_data["JOBID"].values[0])
 
-            plx.ylabel("Performance (GFLOPS)")
-            plx.xlabel("Operational Intensity (FLOPS/byte)")
+        #plx.text(x = np.max(H_I)+ 600, y= np.max(NO_SIMD_DP_W) + np.max(NO_SIMD_DP_W) * Ytext_factor, text = "NO SIMD DP = "+ str(round(NO_SIMD_DP_Rpeak,2))+" GFLOPS", fontsize=8)
+        plx.text("DP Rpeak = "+ str(round(DP_Rpeak,2)), x = xmax - xmax*0.99, y = np.max(D_W))
+        plx.text("SP Rpeak = "+ str(round(SP_Rpeak,2)), x = xmax - xmax*0.99, y = np.max(S_W))
+        plx.text("HP Rpeak = "+ str(round(HP_Rpeak,2)), x = xmax - xmax*0.99, y = np.max(H_W))
+        plx.text("DRAM BW = "+ str(DRAMBW)+ " GB/s", x = np.min(H_I), y = np.mean(H_W) + np.mean(H_W)*0.2)
 
-            plx.subplot(1,2)
-            plx.theme('pro')
+        plx.ylabel("Performance (GFLOPS)")
+        plx.xlabel("Operational Intensity (FLOPS/byte)")
 
-            if self.loops_status:
-                plx.subplot(1,2).subplots(3, 1)
+        plx.subplot(1,2)
+        plx.theme('pro')
 
-                plx.subplot(1,2).subplot(1, 1)
-                plx.scatter(plot_loop_data["time"], plot_loop_data["CPI"],color='red',marker='dot')
-                plx.ylabel("CPI")
-                plx.ylim(0,1)
+        if self.loops_status:
 
-                plx.subplot(1,2).subplot(2, 1)
-                plx.scatter(plot_loop_data["time"], plot_loop_data["MEM_GBS"],color='red',marker='dot')
-                plx.ylabel("MEM_GBS")
-                plx.ylim(0,DRAMBW+100)
+            plot_loop_data = self.loopdata[self.loopdata['Arch'] == arch]
 
-                plx.subplot(1,2).subplot(3, 1)
-                plx.scatter(plot_loop_data["time"], plot_loop_data["GFLOPS"],color='red',marker='dot')
-                plx.ylabel("GFLOPS")
-                #plx.ylim(0,DRAMBW+100)
+            plx.subplot(1,2).subplots(3, 1)
 
+            plx.subplot(1,2).subplot(1, 1)
+            plx.scatter(plot_loop_data["time"], plot_loop_data["CPI"],color='red',marker='dot')
+            plx.ylabel("CPI")
+            plx.ylim(0,1)
 
-            else:
-                plx.text("EAR LOOPS NOT ACTIVATED.\nRe-run your job with `export EARL_REPORT_LOOPS=1`",x=-0.5,y=0)
-                plx.xlim(-1,1)
-            plx.show()
+            plx.subplot(1,2).subplot(2, 1)
+            plx.scatter(plot_loop_data["time"], plot_loop_data["MEM_GBS"],color='red',marker='dot')
+            plx.ylabel("MEM_GBS")
+            plx.ylim(0,DRAMBW+100)
+
+            plx.subplot(1,2).subplot(3, 1)
+            plx.scatter(plot_loop_data["time"], plot_loop_data["GFLOPS"],color='red',marker='dot')
+            plx.ylabel("GFLOPS")
+            #plx.ylim(0,DRAMBW+100)
+        else:
+            plx.text("EAR LOOPS NOT ACTIVATED.\nRe-run your job with `export EARL_REPORT_LOOPS=1`",x=-0.5,y=0)
+            plx.xlim(-1,1)
+        plx.show()
 
 
 if __name__ == "__main__":
@@ -490,13 +486,14 @@ if __name__ == "__main__":
     plotter = Plotter()
     for jobid in args.jobid:
         plotter.eacct_avg(jobid)
-        plotter.roofline()
+        plotter.eacct_loop(jobid)
+        plotter.terminal()
+
+        #plotter.roofline()
         
         # Need to add some try except here
-        plotter.eacct_loop(jobid)
-        plotter.timeline()
+        #plotter.timeline()
 
-        plotter.terminal()
 
 
 
