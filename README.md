@@ -1,7 +1,7 @@
 # Energy efficient computing
 
 ## Schedule
-### December 10th 2024 (start 13:00 end 17:00)
+### May 21st 2025 (start 13:00 end 17:00)
 - Introduction 
 - Energy Monitoring and Optimization
   - Running CPU/GPU Kernals with EAR
