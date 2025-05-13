@@ -1,10 +1,12 @@
 #!/bin/bash
 
-#SBATCH -p gpu
+#SBATCH -p gpu_a100
 #SBATCH --gpus-per-node=1
 #SBATCH -t 00:15:00
 #SBATCH --cpus-per-task=4
 #SBATCH --exclusive
+#SBATCH --ear=on
+#SBATCH --ear-verbose=1
 
 #SBATCH --output=PyTorch.%j.out
 #SBATCH --error=PyTorch.%j.err
@@ -14,7 +16,7 @@ module load 2023
 module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 
 # ENV variable needed to report "loops" to the EARDB
-# export EARL_REPORT_LOOPS=1
+#export EARL_REPORT_LOOPS=1
 
 # location of the binaries for the course
 PROJECT_DIR=/projects/0/energy-course
