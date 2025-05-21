@@ -9,8 +9,8 @@
 #SBATCH --error=GROMACS.GPU.%j.err
 #SBATCH --job-name=GROMACS.GPU
 
-module load 2022
-module load GROMACS/2021.6-foss-2022a-CUDA-11.7.0
+module load 2024
+module load GROMACS/2024.3-foss-2024a-CUDA-12.6.0-PLUMED-2.9.2
 
 # ENV variable needed to report "loops" to the EARDB
 # export EARL_REPORT_LOOPS=1
